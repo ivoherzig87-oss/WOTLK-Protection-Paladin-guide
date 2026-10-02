@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Protection Paladin – návod (WotLK 3.3.5, Warmane Lordaeron)</title>
+
+<!-- Wowhead tooltipy: nastavení MUSÍ být před načtením skriptu -->
+<script>
+  const wowhead_tooltips = { colorlinks: true, iconizelinks: true, renamelinks: false, iconSize: "small" };
+</script>
+<script src="https://wow.zamimg.com/js/tooltips.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #12161d;
+    --panel: #1a2029;
+    --line: #2b3441;
+    --text: #d8dde5;
+    --muted: #8d97a6;
+    --gold: #e2b955;
+    --steel: #7fa6d6;
+    --side-w: 260px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: 1.5rem; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 400 1.0625rem/1.65 "Source Sans 3", system-ui, sans-serif;
+  }
+  a { color: var(--steel); }
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .layout { display: grid; grid-template-columns: var(--side-w) minmax(0, 1fr); min-height: 100vh; }
+
+  /* Boční menu */
+  nav.toc {
+    position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+    padding: 1.75rem 1.25rem; border-right: 1px solid var(--line); background: var(--panel);
+  }
+  nav.toc .brand { font-family: Marcellus, serif; font-size: 1.25rem; color: var(--gold); line-height: 1.25; margin: 0 0 .25rem; }
+  nav.toc .sub { color: var(--muted); font-size: .9rem; margin: 0 0 1.25rem; }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; }
+  nav.toc a {
+    display: block; padding: .3rem .6rem; margin-left: -.6rem; border-left: 2px solid transparent;
+    color: var(--text); text-decoration: none; font-size: .95rem;
+  }
+  nav.toc a:hover { color: var(--gold); }
+  nav.toc a.active { border-left-color: var(--gold); color: var(--gold); }
+
+  /* Obsah */
+  main { padding: 3rem clamp(1.25rem, 5vw, 4rem) 5rem; max-width: 60rem; }
+  header.hero { padding-bottom: 2rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--line); }
+  header.hero h1 { font: 400 clamp(2rem, 5vw, 3.25rem)/1.1 Marcellus, serif; margin: 0 0 .75rem; color: var(--gold); }
+  header.hero p { margin: 0; color: var(--muted); max-width: 42rem; }
+
+  section { margin-bottom: 3.5rem; }
+  h2 { font: 400 1.75rem/1.2 Marcellus, serif; margin: 0 0 1rem; color: var(--gold); }
+  h3 { font: 600 1.25rem/1.3 "Source Sans 3", sans-serif; margin: 1.75rem 0 .5rem; color: var(--text); }
+  h4 { font: 600 1.05rem/1.3 "Source Sans 3", sans-serif; margin: 1.25rem 0 .4rem; }
+  p, ul, ol { max-width: 44rem; }
+  li { margin: .25rem 0; }
+
+  .todo { color: var(--muted); font-style: italic; }
+  .note { background: var(--panel); border-left: 3px solid var(--gold); padding: .75rem 1rem; max-width: 44rem; margin: 1rem 0; overflow-x: auto; }
+
+  /* Tabulky */
+  .table-wrap { overflow-x: auto; margin: 1rem 0; border: 1px solid var(--line); }
+  table { border-collapse: collapse; width: 100%; min-width: 30rem; }
+  th, td { text-align: left; padding: .6rem .85rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--panel); font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+
+  /* Sbalovací FAQ / fáze */
+  details { border: 1px solid var(--line); background: var(--panel); margin: .5rem 0; max-width: 44rem; }
+  summary { cursor: pointer; padding: .7rem 1rem; font-weight: 600; }
+  details[open] summary { border-bottom: 1px solid var(--line); }
+  details > div { padding: .25rem 1rem .75rem; }
+
+  footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  }
+
+/* ===== ZAČÁTEK KOMPONENTY: CSS (vlož do <style>) ===== */
+  .tt { max-width: 56rem; margin: 1.5rem 0; }
+  .tt-tabs { display: flex; gap: .5rem; margin-bottom: .75rem; }
+  .tt-tabs button { font: inherit; color: var(--text, #d8dde5); background: var(--panel, #1a2029); border: 1px solid var(--line, #2b3441); padding: .4rem .9rem; cursor: pointer; }
+  .tt-tabs button[aria-pressed="true"] { border-color: var(--gold, #e2b955); color: var(--gold, #e2b955); }
+  .tt-tabs button:focus-visible { outline: 2px solid var(--gold, #e2b955); outline-offset: 2px; }
+  .tt-meta { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; align-items: baseline; margin-bottom: .75rem; color: var(--muted, #8d97a6); font-size: .95rem; }
+  .tt-meta strong { color: var(--text, #d8dde5); }
+  .tt-trees { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: .75rem; }
+  .tt-tree { border: 1px solid var(--line, #2b3441); background: var(--panel, #1a2029); padding: .5rem .5rem .6rem; }
+  .tt-tree h4 { margin: 0 0 .5rem; font-size: 1rem; font-weight: 600; display: flex; justify-content: space-between; }
+  .tt-tree h4 span { color: var(--gold, #e2b955); }
+  .tt-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(11, auto); gap: 4px; max-width: 18rem; margin: 0 auto; padding: 4px; background-size: cover; background-position: center; }
+  .tt-t { position: relative; aspect-ratio: 1; border: 2px solid var(--line, #2b3441); background: #0b0e13; }
+  .tt-t img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; opacity: .3; filter: grayscale(1); }
+  .tt-t.on { border-color: var(--gold, #e2b955); }
+  .tt-t.part { border-color: var(--steel, #7fa6d6); }
+  .tt-t.on img { opacity: 1; filter: none; }
+  /* průhledný odkaz přes celou dlaždici: nese tooltip, ikonu z Wowheadu si nevšímáme */
+  .tt-t a { position: absolute; inset: 0; z-index: 2; display: block; overflow: hidden; opacity: 0; }
+  .tt-t:focus-within { outline: 2px solid var(--gold, #e2b955); outline-offset: 1px; }
+  .tt-t b { position: absolute; right: 0; bottom: 0; z-index: 1; padding: 0 .25rem; font-size: .75rem; line-height: 1.3; color: var(--gold, #e2b955); background: rgba(11,14,19,.88); pointer-events: none; }
+  .tt-t.part b { color: var(--steel, #7fa6d6); }
+  .tt-note { color: var(--muted, #8d97a6); font-size: .85rem; margin: .6rem 0 0; }
+  /* ===== KONEC KOMPONENTY: CSS ===== */
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <nav class="toc" aria-label="Obsah návodu">
+    <p class="brand">Prot Paladin</p>
+    <p class="sub">WotLK 3.3.5a · Warmane Lordaeron</p>
+    <ol>
+      <li><a href="#uvod">1. Úvod</a></li>
+      <li><a href="#zaklady">2. Základy tankování</a></li>
+      <li><a href="#talenty">3. Talenty a glyphy</a></li>
+      <li><a href="#staty">4. Staty a gemy</a></li>
+      <li><a href="#rasa">5. Rasa a frakce</a></li>
+      <li><a href="#vybava">6. Cesta k vybavení</a></li>
+      <li><a href="#rotace">7. Rotace a priority</a></li>
+      <li><a href="#cooldowny">8. Cooldowny a utility</a></li>
+      <li><a href="#consumables">9. Consumables a buffy</a></li>
+      <li><a href="#addony">10. Addony a makra</a></li>
+      <li><a href="#profese">11. Profese</a></li>
+      <li><a href="#icc">12. ICC a Ruby Sanctum</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <h1>Protection Paladin</h1>
+      <p>Návod pro tankování na Warmane Lordaeron (WotLK 3.3.5a). Aktualizováno: <span class="todo">DD. MM. RRRR</span></p>
+    </header>
+
+    <section id="uvod">
+      <h2>1. Úvod</h2>
+      <p>Tento návod je určen pro Protection Paladiny v naší guildě, hraný na serveru Warmane Lordaeron (WotLK 3.3.5a). Je více zaměřený na raidy ICC a RS.</p>
+      <h3>Priority tanka</h3>
+      <ol>
+        <li><strong>Přežít.</strong> Mrtvý tank = mrtvý raid. Jo a kdyby to někoho napadlo, tak ani RL nemá takovou prioritu na přežití XD</li>
+        <li><strong>Držet aggro.</strong> Ať se jedná o samotného bosse nebo addky, chráníte tím členy raidu. Prioritou na ochranu jsou zejména healeři.</li>
+        <li><strong>Pomáhat raidu.</strong> Používání defenzivních cooldownů, aury, blessingy, handy.</li>
+      </ol>
+      <p>ProtPaladin funguje většinou jako offtank, ale v některých situacích tankuje i hlavního bosse. Rozdíly najdeš v sekci Rotace a priority (single target vs. AoE) a v sekci ICC a Ruby Sanctum, kde je u každého bosse popsaná role offtanka i to, co se mění, když jsi hlavní tank.</p>
+    </section>
+
+    <section id="zaklady">
+      <h2>2. Základy tankování</h2>
+
+      <h3>Avoidance vs. mitigation</h3>
+      <p>Obrana tanka stojí na dvou principech, které se doplňují:</p>
+      <ul>
+        <li><strong>Avoidance</strong> (vyhýbání) – útok tě vůbec nezasáhne. Patří sem dodge, parry, miss a u paladina navíc block. Čím vyšší avoidance, tím méně útoků na tebe vůbec dopadne. Mezi dodge a parry je rozdíl v efektivitě: <strong>stackovat dodge je efektivnější než parry</strong> (někteří bossové majíparry haste – parírovaný útok zrychluje bossovi další swing, což zvyšuje riziko rychlejšího poškození).</li>
+        <li><strong>Mitigation</strong> (zmírnění) – útok tě zasáhne, ale sníží se jeho dopad. Patří sem armor (snižuje fyzické poškození) a block value (o kolik zmírní zablokovaný útok).</li>
+      </ul>
+      <p>Paladin je jediný tank, který kombinuje obojí naráz díky <a href="https://www.wowhead.com/wotlk/spell=48952">Holy Shield</a>, který zvyšuje šanci na block a zároveň zvyšuje block value.</p>
+
+      <h3>Crit immunity a defense cap</h3>
+      <p>Tank nesmí dostat critical hit od bosse, protože crit dokáže zabít i dobře vybaveného tanka jedním zásahem. Tomu se říká crit immunity a dosáhne se navýšením defense skillu.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Situace</th><th>Defense cap</th></tr></thead>
+          <tbody>
+            <tr><td>Heroic dungeony (RHC)</td><td><strong>535</strong></td></tr>
+            <tr><td>Raid bossové (ICC, RS)</td><td><strong>540</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Hit a expertise</h3>
+      <ul>
+        <li><strong>Hit cap: 8 %</strong> – týká se melee útoků (<a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a>, <a href="https://www.wowhead.com/wotlk/spell=61411">Shield of Righteousness</a>). Nad tímto capem už tvé melee útoky bossa neminou.</li>
+        <li><strong>Expertise cap: 26</strong> – snižuje šanci, že boss tvůj útok dodgne nebo paríruje. Se <a href="https://www.wowhead.com/wotlk/spell=31801">Seal of Vengeance</a>/<a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/spell=59561">Glyph of Seal of Vengeance</a> získáš dalších 10 exp navíc. Stačí ti tedy 16 a s touto kombinací máš 26 expertise celkem.</li>
+      </ul>
+
+      <h3>Threat</h3>
+      <p>Základ threatu tvoří <a href="https://www.wowhead.com/wotlk/spell=25780">Righteous Fury</a> spolu s talentem <a href="https://www.wowhead.com/wotlk/spell=20470">Improved Righteous Fury</a> – bez nich generuješ zlomek threatu a nikdy neudržíš aggro na vybaveném DPS. Righteous Fury musí být zapnuté vždy, když tankuješ.</p>
+      <p>Hlavní zdroje threatu se dělí podle délky cooldownu:</p>
+      <p><strong>Schopnosti s cooldownem 6 s</strong></p>
+      <ul>
+        <li><a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a></li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=61411">Shield of Righteousness</a></li>
+      </ul>
+      <p><strong>Schopnosti s cooldownem 9 s</strong> (od nejlepšího po nejslabší zdroj threatu)</p>
+      <ol>
+        <li><a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a> (situačně <a href="https://www.wowhead.com/wotlk/spell=20271">Judgement of Light</a>)</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a></li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=48952">Holy Shield</a></li>
+      </ol>
+      <p><strong>Mimo pravidelnou rotaci</strong></p>
+      <ul>
+        <li><a href="https://www.wowhead.com/wotlk/spell=48827">Avenger's Shield</a> – delší cooldown, hlavně na pully a jako otvírák threatu na dálku</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a> – taunt s threat komponentou</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=24275">Hammer of Wrath</a> – použitelný jen pod 20 % HP cíle</li>
+      </ul>
+      <p><strong>Situační booster threatu</strong></p>
+      <ul>
+        <li><a href="https://www.wowhead.com/wotlk/spell=31884">Avenging Wrath</a> – zvyšuje veškerý způsobený damage a threat po omezenou dobu, hodí se využít na náročné pully nebo při hrozící ztrátě aggra</li>
+      </ul>
+    </section>
+
+    <section id="talenty">
+      <h2>3. Talenty a glyphy</h2>
+      <p>Build: Protection 56 bodů, Retribution 15 bodů, Holy 0 bodů. <a href="https://www.wowhead.com/wotlk/talent-calc/paladin/-15005135223102311333312321-502302012_001nmh11q3021xqq31rjv41rjh51rk3/1aBEfGHJKMnQRstVZWXyILOu2ACDFhJ" target="_blank" rel="noopener">Otevřít v kalkulačce</a></p>
+
+<!-- ===== ZAČÁTEK KOMPONENTY: HTML + JS (vlož do sekce 3) ===== -->
+<div class="tt" id="talent-tree"></div>
+<script>
+(function () {
+  // Data stromů (pozice, max ranky, spell ID) – needitovat
+  const TREES = {"prot":{"name":"Protection","bg":"https://wow.zamimg.com/images/wow/talents/backgrounds/classic/383.jpg","t":[["Divinity",0,1,5,[63646],"spell_holy_blindingheal"],["Divine Strength",0,2,5,[20262],"ability_golemthunderclap"],["Stoicism",1,0,3,[31844,31845,53519],"spell_holy_stoicism"],["Guardian's Favor",1,1,2,[20174],"spell_holy_sealofprotection"],["Anticipation",1,2,5,[20096],"spell_magic_lesserinvisibilty"],["Divine Sacrifice",2,0,1,[64205],"spell_holy_powerwordbarrier"],["Improved Righteous Fury",2,1,3,[20468],"spell_holy_sealoffury"],["Toughness",2,2,5,[20143],"spell_holy_devotion"],["Divine Guardian",3,0,2,[53527,53530],"spell_holy_powerwordbarrier"],["Improved Hammer of Justice",3,1,2,[20487],"spell_holy_sealofmight"],["Improved Devotion Aura",3,2,3,[20138],"spell_holy_devotionaura"],["Blessing of Sanctuary",4,1,1,[20911],"spell_nature_lightningshield"],["Reckoning",4,2,5,[20177,20179,20181,20180,20182],"spell_holy_blessingofstrength"],["Sacred Duty",5,0,2,[31848],"spell_holy_divineintervention"],["One Handed Weapon Specialization",5,2,3,[20196],"inv_sword_20"],["Spiritual Attunement",6,0,2,[31785,33776],"spell_holy_revivechampion"],["Holy Shield",6,1,1,[20925],"classic_spell_holy_blessingofprotection"],["Ardent Defender",6,2,3,[31850],"spell_holy_ardentdefender"],["Redoubt",7,0,3,[20127,20130,20135],"ability_defend"],["Combat Expertise",7,2,3,[31858],"spell_holy_weaponmastery"],["Touched By the Light",8,0,3,[53590],"ability_paladin_touchedbylight"],["Avenger's Shield",8,1,1,[31935],"spell_holy_avengersshield"],["Guarded By the Light",8,2,2,[53583,53585],"ability_paladin_gaurdedbythelight"],["Shield of the Templar",9,1,3,[53709],"ability_paladin_shieldofthetemplar"],["Judgements of the Just",9,2,2,[53695],"ability_paladin_judgementsofthejust"],["Hammer of the Righteous",10,1,1,[53595],"ability_paladin_hammeroftherighteous"]]},"ret":{"name":"Retribution","bg":"https://wow.zamimg.com/images/wow/talents/backgrounds/classic/381.jpg","t":[["Deflection",0,1,5,[20060],"ability_parry"],["Benediction",0,2,5,[20101],"spell_frost_windwalkon"],["Improved Judgements",1,0,2,[25956],"spell_holy_righteousfury"],["Heart of the Crusader",1,1,3,[20335],"spell_holy_holysmite"],["Improved Blessing of Might",1,2,2,[20042,20045],"spell_holy_fistofjustice"],["Vindication",2,0,2,[9452,26016],"spell_holy_vindication"],["Conviction",2,1,5,[20117],"spell_holy_retributionaura"],["Seal of Command",2,2,1,[20375],"ability_warrior_innerrage"],["Pursuit of Justice",2,3,2,[26022],"spell_holy_persuitofjustice"],["Eye for an Eye",3,0,2,[9799,25988],"spell_holy_eyeforaneye"],["Sanctity of Battle",3,2,3,[32043,35396,35397],"spell_holy_holysmite"],["Crusade",3,3,3,[31866],"spell_holy_crusade"],["Two Handed Weapon Specialization",4,0,3,[20111],"inv_hammer_04"],["Sanctified Retribution",4,2,1,[31869],"spell_holy_mindvision"],["Vengeance",5,1,3,[20049,20056,20057],"ability_racial_avatar"],["Divine Purpose",5,2,2,[31871],"spell_holy_divinepurpose"],["The Art of War",6,0,2,[53486,53488],"ability_paladin_artofwar"],["Repentance",6,1,1,[20066],"spell_holy_prayerofhealing"],["Judgements of the Wise",6,2,3,[31876],"ability_paladin_judgementofthewise"],["Fanaticism",7,1,3,[31879],"spell_holy_fanaticism"],["Sanctified Wrath",7,2,2,[53375],"ability_paladin_sanctifiedwrath"],["Swift Retribution",8,0,3,[53379,53484,53648],"ability_paladin_swiftretribution"],["Crusader Strike",8,1,1,[35395],"spell_holy_crusaderstrike"],["Sheath of Light",8,2,3,[53501],"ability_paladin_sheathoflight"],["Righteous Vengeance",9,1,3,[53380],"ability_paladin_righteousvengeance"],["Divine Storm",10,1,1,[53385],"ability_paladin_divinestorm"]]},"holy":{"name":"Holy","bg":"https://wow.zamimg.com/images/wow/talents/backgrounds/classic/382.jpg","t":[["Spiritual Focus",0,1,5,[20205],"spell_arcane_blink"],["Seals of the Pure",0,2,5,[20224,20225,20330],"ability_thunderbolt"],["Healing Light",1,0,3,[20237],"spell_holy_holybolt"],["Divine Intellect",1,1,5,[20257],"spell_nature_sleep"],["Unyielding Faith",1,2,2,[9453,25836],"spell_holy_unyieldingfaith"],["Aura Mastery",2,0,1,[31821],"spell_holy_auramastery"],["Illumination",2,1,5,[20210,20212],"spell_holy_greaterheal"],["Improved Lay On Hands",2,2,2,[20234],"spell_holy_layonhands"],["Improved Concentration Aura",3,0,3,[20254],"spell_holy_mindsooth"],["Improved Blessing of Wisdom",3,2,2,[20244],"spell_holy_sealofwisdom"],["Blessed Hands",3,3,2,[53660],"ability_paladin_blessedhands"],["Pure of Heart",4,0,2,[31822],"spell_holy_pureofheart"],["Divine Favor",4,1,1,[20216],"spell_holy_heal"],["Sanctified Light",4,2,3,[20359],"spell_holy_healingaura"],["Purifying Power",5,0,2,[31825],"spell_holy_purifyingpower"],["Holy Power",5,2,5,[5923,5924,5925,5926,25829],"spell_holy_power"],["Light's Grace",6,0,3,[31833,31835],"spell_holy_lightsgrace"],["Holy Shock",6,1,1,[20473],"spell_holy_searinglight"],["Blessed Life",6,2,3,[31828],"spell_holy_blessedlife"],["Sacred Cleansing",7,0,3,[53551],"ability_paladin_sacredcleansing"],["Holy Guidance",7,2,5,[31837],"spell_holy_holyguidance"],["Divine Illumination",8,0,1,[31842],"spell_holy_divineillumination"],["Judgements of the Pure",8,2,5,[53671,53673,54151,54154,54155],"ability_paladin_judgementofthepure"],["Infusion of Light",9,1,2,[53569,53576],"ability_paladin_infusionoflight"],["Enlightened Judgements",9,2,2,[53556],"ability_paladin_enlightenedjudgements"],["Beacon of Light",10,1,1,[53563],"ability_paladin_beaconoflight"]]}};
+  // Buildy: ranky v pořadí talentů z TREES. Další build (např. "AoE") přidej jako další klíč.
+  const BUILDS = {"Raid":{"calc":"https://www.wowhead.com/wotlk/talent-calc/paladin/-15005135223102311333312321-502302012","prot":[1,5,0,0,5,1,3,5,2,2,3,1,0,2,3,1,1,3,3,3,3,1,2,3,2,1],"ret":[5,0,2,3,0,2,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"holy":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}};
+
+  const root = document.getElementById('talent-tree');
+  const names = Object.keys(BUILDS);
+  let current = names[0];
+
+  const ICON = 'https://wow.zamimg.com/images/wow/icons/large/';
+  function tile(t, rank) {
+    const [name, row, col, max, ids, icon] = t;
+    const id = ids[Math.max(0, Math.min(rank, ids.length) - 1)];
+    const cls = rank === 0 ? '' : (rank < max ? ' on part' : ' on');
+    const badge = rank > 0 ? '<b>' + rank + '/' + max + '</b>' : '';
+    return '<div class="tt-t' + cls + '" style="grid-row:' + (row + 1) + ';grid-column:' + (col + 1) + '">' +
+      '<img src="' + ICON + icon + '.jpg" alt="" loading="lazy">' +
+      '<a href="https://www.wowhead.com/wotlk/spell=' + id + '">' + name + '</a>' + badge + '</div>';
+  }
+
+  function tree(key, b) {
+    const T = TREES[key], r = b[key];
+    const pts = r.reduce((a, x) => a + x, 0);
+    const bg = 'linear-gradient(rgba(18,22,29,.85),rgba(18,22,29,.85)),url(' + T.bg + ')';
+    return '<div class="tt-tree"><h4>' + T.name + '<span>' + pts + '</span></h4>' +
+      '<div class="tt-grid" style="background-image:' + bg + '">' + T.t.map((t, i) => tile(t, r[i])).join('') + '</div></div>';
+  }
+
+  function render() {
+    const b = BUILDS[current];
+    const sum = k => b[k].reduce((a, x) => a + x, 0);
+    let h = '';
+    if (names.length > 1) {
+      h += '<div class="tt-tabs" role="group" aria-label="Varianta buildu">' + names.map(n =>
+        '<button type="button" data-b="' + n + '" aria-pressed="' + (n === current) + '">' + n + '</button>').join('') + '</div>';
+    }
+    h += '<div class="tt-meta"><span>Holy / Protection / Retribution: <strong>' + sum('holy') + ' / ' + sum('prot') + ' / ' + sum('ret') +
+      '</strong></span><a href="' + b.calc + '" target="_blank" rel="noopener">Otevřít v kalkulačce</a></div>';
+    h += '<div class="tt-trees">' + tree('holy', b) + tree('prot', b) + tree('ret', b) + '</div>';
+    h += '<p class="tt-note">Číslo v rohu je investovaný rank. Zlatý rámeček = plně vybráno, modrý = částečně. Popis se zobrazí po najetí myší.</p>';
+    root.innerHTML = h;
+    root.querySelectorAll('.tt-tabs button').forEach(btn => btn.addEventListener('click', () => { current = btn.dataset.b; render(); refresh(); }));
+  }
+
+  function refresh() { if (window.$WowheadPower && $WowheadPower.refreshLinks) $WowheadPower.refreshLinks(); }
+  render();
+  window.addEventListener('load', refresh);
+})();
+</script>
+<!-- ===== KONEC KOMPONENTY: HTML + JS ===== -->
+
+      <h3>Glyphy</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Typ</th><th>Glyph</th><th>Efekt</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Major</td>
+              <td><a href="https://www.wowhead.com/wotlk/spell=57032">Glyph of Righteous Defense</a></td>
+              <td>+8 % šance, že Righteous Defense a Hand of Reckoning projdou na každém cíli.</td>
+            </tr>
+            <tr>
+              <td>Major</td>
+              <td><a href="https://www.wowhead.com/wotlk/spell=64305">Glyph of Divine Plea</a></td>
+              <td>Po dobu Divine Plea dostáváš o 3 % menší poškození ze všech zdrojů.</td>
+            </tr>
+            <tr>
+              <td>Major</td>
+              <td><a href="https://www.wowhead.com/wotlk/spell=59561">Glyph of Seal of Vengeance</a></td>
+              <td>Seal of Vengeance (Alliance) / Seal of Corruption (Horde) navíc dává 10 expertise.</td>
+            </tr>
+            <tr>
+              <td>Minor</td>
+              <td><a href="https://www.wowhead.com/wotlk/spell=58315">Glyph of Sense Undead</a></td>
+              <td>+1 % poškození proti Undead při aktivním Sense Undead.</td>
+            </tr>
+            <tr>
+              <td>Minor</td>
+              <td><a href="https://www.wowhead.com/wotlk/spell=58313">Glyph of Lay on Hands</a></td>
+              <td>Cooldown Lay on Hands kratší o 5 minut.</td>
+            </tr>
+            <tr>
+              <td>Minor</td>
+              <td><a href="https://www.wowhead.com/wotlk/spell=58311">Glyph of Blessing of Kings</a></td>
+              <td>Blessing of Kings a Greater Blessing of Kings stojí o 50 % méně many.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="staty">
+      <h2>4. Staty, gemy a enchanty</h2>
+
+      <h3>Stat priorita</h3>
+      <ol>
+        <li><strong>Defense</strong> – do dosažení capu (535 RHC / 540 raid). Nad cap už je zbytečná.</li>
+        <li><strong>Stamina</strong> – základ přežití.</li>
+        <li><strong>Hit</strong> – do capu 8 % (melee).</li>
+        <li><strong>Expertise</strong> – do capu 16 (26 se sealem a glyphem).</li>
+        <li><strong>Block Value</strong> – zvyšuje mitigation z bloknutých útoků a threat z Holy Shield.</li>
+        <li><strong>Strength</strong> – zvyšuje attack power (a tím threat) a block value.</li>
+        <li><strong>Armor</strong> – snižuje fyzické poškození.</li>
+      </ol>
+
+      <h3>Gemy</h3>
+      <ul>
+        <li><strong>Meta gem:</strong> <a href="https://www.wowhead.com/wotlk/item=41380">Austere Earthsiege Diamond</a> (+32 Stamina, +2 % Armor Value z itemů).</li>
+        <li><strong>Modrý socket – Stamina:</strong> <a href="https://www.wowhead.com/wotlk/item=40119">Solid Majestic Zircon</a> (+30 Stamina). S Jewelcrafting místo něj <a href="https://www.wowhead.com/wotlk/item=36767">Solid Dragon's Eye</a> (+51 Stamina, unique-equipped).</li>
+        <li><strong>Červený socket – Expertise:</strong> <a href="https://www.wowhead.com/wotlk/item=40117">Fractured Cardinal Ruby</a> (+20 Expertise Rating).</li>
+        <li><strong>Červený socket – Hit:</strong> <a href="https://www.wowhead.com/wotlk/item=40118">Precise Cardinal Ruby</a> (+20 Hit Rating).</li>
+        <li><strong>Žlutý socket – Defense:</strong> <a href="https://www.wowhead.com/wotlk/item=40126">Thick King's Amber</a> (+20 Defense Rating).</li>
+        <li><strong>Základní gemování:</strong> kombinace Stamina + Defense/Expertise/Hit podle toho, kde jsi vůči capům. Snažíme se nacpat co nejvíc modrásků.</li>
+        <li><strong>Socket bonusy:</strong> pro slabý socket bonus (6) neobětovat možné umístění čistého gemu. Umisťování hybridních gemů obecně vychází ve výsledku hůře.</li>
+      </ul>
+
+      <h3>Enchanty</h3>
+      <ul>
+        <li><strong>Head:</strong> <a href="https://www.wowhead.com/wotlk/spell=67839">Mind Amplification Dish</a> (+45 Stamina)</li>
+        <li><strong>Shoulders:</strong> <a href="https://www.wowhead.com/wotlk/item=44957">Greater Inscription of the Gladiator</a> (+30 Stamina) Nebo do začátku<a href="https://www.wowhead.com/wotlk/item=50337">Greater Inscription of the Pinnacle</a> (+20 Dodge, + 15 Defense)</li>
+        <li><strong>Hands:</strong> Jedině <a href="https://www.wowhead.com/wotlk/spell=63770">Reticulated Armor Webbing</a> (+885 Armor) Pokud máte BS tak <a href="https://www.wowhead.com/wotlk/spell=55641">Socket Gloves</a> pro extra slot na gem</li>
+        <li><strong>Wrists:</strong> Jedině <a href="https://www.wowhead.com/wotlk/spell=62256">Enchant Bracers - Major Stamina</a> (+40 Stamina) Pokud máte BS tak <a href="https://www.wowhead.com/wotlk/spell=55628">Socket Bracer</a> pro extra slot na gem</li>
+        <li><strong>Chest:</strong> Jedině <a href="https://www.wowhead.com/wotlk/spell=60692">Enchant Chest - Powerful Stats</a> (+10 ke všem statům)</li>
+        <li><strong>Waist:</strong> <a href="https://www.wowhead.com/wotlk/item=41611">Eternal Belt Buckle</a> přidá slot na gem</li>
+        <li><strong>Legs:</strong> <a href="https://www.wowhead.com/wotlk/item=38373">Frosthide Leg Armor</a> (+55 Stamina, +22 Agility)</li>
+        <li><strong>Feet:</strong> Jedině <a href="https://www.wowhead.com/wotlk/item=41118">Nitro Boosts</a></li>
+        <li><strong>Back:</strong> Nejlepší volbou je <a href="https://www.wowhead.com/wotlk/spell=47672">Enchant Cloak - Mighty Armor</a> (+225 Armor) Nebo když vám chybí Defense<a href="https://www.wowhead.com/wotlk/spell=44591">Enchant Cloak - Titanweave</a> (+ 16 Defense)</li>
+        <li><strong>Weapon:</strong> Nejlepší volbou je <a href="https://www.wowhead.com/wotlk/spell=27984">Enchant Weapon - Mongoose</a> (+120 Agility)</li>
+        <li><strong>Shield:</strong> <a href="https://www.wowhead.com/wotlk/item=44936">Titanium Plating</a> (+81 Block value)</li>
+      </ul>
+    </section>
+
+    <section id="rasa">
+      <h2>5. Rasa a frakce</h2>
+
+      <h3>Horda: Blood Elf</h3>
+      <p>Jediná dostupná rasa pro paladina na Hordě.</p>
+      <ul>
+        <li><a href="https://www.wowhead.com/wotlk/spell=28730">Arcane Torrent</a> – silence na okolní nepřátele + obnova many.</li>
+        <li>Bonus k magickým resistencím a Enchanting skillu.</li>
+      </ul>
+
+      <h3>Alliance: Dwarf, Human, Draenei (od nejlepšího po nejhorší pro tankování)</h3>
+      <p><strong>1. Dwarf</strong></p>
+      <ul>
+        <li><a href="https://www.wowhead.com/wotlk/spell=20594">Stoneform</a> – +10 % Armor na 8 s a odstraní poison/disease/bleed.</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=59224">Mace Specialization</a> – bonus expertise při použití palcátu.</li>
+      </ul>
+      <p><strong>2. Human</strong></p>
+      <ul>
+        <li><a href="https://www.wowhead.com/wotlk/spell=20597">Sword Specialization</a> a <a href="https://www.wowhead.com/wotlk/spell=20864">Mace Specialization</a> – bonus expertise při použití meče nebo palcátu.</li>
+        <li>Diplomacy – rychlejší farmení reputace.</li>
+        <li>Perception – bonus proti stealth.</li>
+      </ul>
+      <p><strong>3. Draenei</strong></p>
+      <ul>
+        <li>Heroic Presence – +1 % hit celé grupě.</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=28880">Gift of the Naaru</a> – bezmanový self-heal (HoT), cooldown 3 min.</li>
+      </ul>
+      <p class="todo">Spell ID pro Stoneform, Mace/Sword Specialization a Gift of the Naaru doporučuji ještě ověřit přímo na Wowheadu.</p>
+    </section>
+
+    <section id="vybava">
+      <h2>6. Cesta k vybavení</h2>
+
+      <p><strong>Head:</strong> Pro GS na RHC: <a href="https://www.wowhead.com/wotlk/item=41387">Tempered Titansteel Helm</a> (BS, aukce). Pre-Raid: <a href="https://www.wowhead.com/wotlk/item=50311">Second Helm of the Executioner</a> (HoR). PreBiS: <a href="https://www.wowhead.com/wotlk/item=51266">Sanctified Lightsworn Faceguard</a>, <a href="https://www.wowhead.com/wotlk/item=50640">Broken Ram Skull Helm</a>. BiS: stejné kusy z heroic obtížnosti.</p>
+
+      <p><strong>Neck:</strong> Pre-Raid: <a href="https://www.wowhead.com/wotlk/item=50310">Fossilized Ammonite Choker</a> (HoR), <a href="https://www.wowhead.com/wotlk/item=47466">Legionnaire's Gorget</a>. PreBiS: <a href="https://www.wowhead.com/wotlk/item=50627">Noose of Malachite</a> (heroic). BiS: <a href="https://www.wowhead.com/wotlk/item=50682">Bile-Encrusted Medallion</a> (heroic).</p>
+
+      <p><strong>Shoulders:</strong> Pre-Raid: <a href="https://www.wowhead.com/wotlk/item=50234">Shoulderplates of Frozen Blood</a> (PoS). PreBiS: <a href="https://www.wowhead.com/wotlk/item=50674">Raging Behemoth's Shoulderplates</a>, <a href="https://www.wowhead.com/wotlk/item=50660">Boneguard Commander's Pauldrons</a> (heroic). BiS: <a href="https://www.wowhead.com/wotlk/item=51269">Sanctified Lightsworn Shoulderguards</a> (heroic).</p>
+
+      <p><strong>Back:</strong> Pro GS na RHC: <a href="https://www.wowhead.com/wotlk/item=43565">Durable Nerubhide Cape</a> (LW, aukce). Pre-Raid: <a href="https://www.wowhead.com/wotlk/item=40722">Platinum Mesh Cloak</a>. Za Frosty: <a href="https://www.wowhead.com/wotlk/item=50466">Sentinel's Winter Cloak</a> (BiS). PreBiS: <a href="https://www.wowhead.com/wotlk/item=50718">Royal Crimson Cloak</a>.</p>
+
+      <p><strong>Chest:</strong> Pre-Raid: <a href="https://www.wowhead.com/wotlk/item=50285">Icebound Bronze Cuirass</a> (PoS). PreBiS: <a href="https://www.wowhead.com/wotlk/item=50606">Gendarme's Cuirass</a>, <a href="https://www.wowhead.com/wotlk/item=50681">Blightborne Warplate</a>. BiS: <a href="https://www.wowhead.com/wotlk/item=51265">Sanctified Lightsworn Chestguard</a> (heroic).</p>
+
+      <p><strong>Wrist:</strong> Pro GS na RHC: <a href="https://www.wowhead.com/wotlk/item=47571">Saronite Swordbreakers</a>. PreBiS: <a href="https://www.wowhead.com/wotlk/item=51901">Gargoyle Spit Bracers</a> (normal), <a href="https://www.wowhead.com/wotlk/item=50611">Bracers of Dark Reckoning</a>. BiS: <a href="https://www.wowhead.com/wotlk/item=51901">Gargoyle Spit Bracers</a> (heroic).</p>
+
+      <p><strong>Hands:</strong> Pro GS na RHC: <a href="https://www.wowhead.com/wotlk/item=44183">Fireproven Gauntlets</a>. PreBiS: <a href="https://www.wowhead.com/wotlk/item=50716">Taldaram's Plated Fists</a>, <a href="https://www.wowhead.com/wotlk/item=51835">Veincrusher Gauntlets</a>. BiS: <a href="https://www.wowhead.com/wotlk/item=51267">Sanctified Lightsworn Handguards</a> (heroic).</p>
+
+      <p><strong>Waist:</strong> Pro GS na RHC: <a href="https://www.wowhead.com/wotlk/item=50451">Belt of the Lonely Noble</a> (BoE, aukce), <a href="https://www.wowhead.com/wotlk/item=45551">Indestructible Plate Girdle</a> (BS, aukce). Za Frosty: <a href="https://www.wowhead.com/wotlk/item=50991">Verdigris Chain Belt</a> (BiS). PreBiS: <a href="https://www.wowhead.com/wotlk/item=51831">Ironrope Belt of Ymirjar</a>.</p>
+
+      <p><strong>Legs:</strong> Pro GS na RHC: <a href="https://www.wowhead.com/wotlk/item=49904">Pillars of Might</a> (BS, aukce). PreBiS: <a href="https://www.wowhead.com/wotlk/item=49904">Pillars of Might</a> (BS, aukce). BiS: <a href="https://www.wowhead.com/wotlk/item=51268">Sanctified Lightsworn Legguards</a> (heroic).</p>
+
+      <p><strong>Feet:</strong> Pro GS na RHC: <a href="https://www.wowhead.com/wotlk/item=49907">Boots of Kingly Upheaval</a> (BS, aukce). Pre-Raid: <a href="https://www.wowhead.com/wotlk/item=50207">Black Spire Sabatons</a> (FoS). PreBiS: <a href="https://www.wowhead.com/wotlk/item=50625">Grinning Skull Greatboots</a> (heroic). BiS: <a href="https://www.wowhead.com/wotlk/item=54579">Treads of Impending Resurrection</a> (heroic).</p>
+
+      <p><strong>Ring:</strong> Pro GS na RHC: <a href="https://www.wowhead.com/wotlk/item=50447">Harbinger's Bone Band</a> (BoE, aukce), <a href="https://www.wowhead.com/wotlk/item=42643">Titanium Earthguard Ring</a> (JC, aukce). PreBiS: <a href="https://www.wowhead.com/wotlk/item=50642">Juggernaut Band</a>, <a href="https://www.wowhead.com/wotlk/item=51913">Abomination's Bloody Ring</a>. BiS: <a href="https://www.wowhead.com/wotlk/item=50404">Ashen Band of Endless Courage</a> (Q), <a href="https://www.wowhead.com/wotlk/item=50622">Devium's Eternally Cold Ring</a> (heroic). Stojí za zmínku: <a href="https://www.wowhead.com/wotlk/item=49489">Signified Ring of Binding</a>.</p>
+
+      <p><strong>Trinket:</strong> Pro GS na RHC: <a href="https://www.wowhead.com/wotlk/item=40767">Sonic Booster</a>, <a href="https://www.wowhead.com/wotlk/item=44063">Figurine - Monarch Crab</a> (JC). Pre-Raid: <a href="https://www.wowhead.com/wotlk/item=47735">Glyph of Indomitability</a>, <a href="https://www.wowhead.com/wotlk/item=50235">Ick's Rotting Thumb</a> (PoS). Za Frosty: <a href="https://www.wowhead.com/wotlk/item=50356">Corroded Skeleton Key</a>. PreBiS: <a href="https://www.wowhead.com/wotlk/item=50352">Corpse Tongue Coin</a>, <a href="https://www.wowhead.com/wotlk/item=47451">Juggernaut's Vitality</a>. BiS: <a href="https://www.wowhead.com/wotlk/item=54591">Petrified Twilight Scale</a>, <a href="https://www.wowhead.com/wotlk/item=50364">Sindragosa's Flawless Fang</a> (heroic) / <a href="https://www.wowhead.com/wotlk/item=50361">Sindragosa's Flawless Fang</a> (normal).</p>
+
+      <p><strong>Weapon:</strong> Pro GS na RHC: <a href="https://www.wowhead.com/wotlk/item=41383">Titansteel Bonecrusher</a>. Pre-Raid: <a href="https://www.wowhead.com/wotlk/item=50268">Rimefang's Claw</a> (PoS), <a href="https://www.wowhead.com/wotlk/item=50290">Falric's Wrist-Chopper</a> (HoR). PreBiS: <a href="https://www.wowhead.com/wotlk/item=51937">Bonebreaker Scepter</a>, <a href="https://www.wowhead.com/wotlk/item=50708">Last Word</a>, <a href="https://www.wowhead.com/wotlk/item=51893">Gutbuster</a>, <a href="https://www.wowhead.com/wotlk/item=50672">Bloodvenom Blade</a> (heroic). BiS: <a href="https://www.wowhead.com/wotlk/item=50738">Mithrios, Bronzebeard's Legacy</a> (heroic).</p>
+
+      <p><strong>Shield:</strong> Pro GS na RHC: <a href="https://www.wowhead.com/wotlk/item=42508">Titansteel Shield Wall</a>(BS, aukce). Pre-Raid: <a href="https://www.wowhead.com/wotlk/item=40475">Barricade of Eternity</a>, <a href="https://www.wowhead.com/wotlk/item=48055">Aegis of the Coliseum</a>. PreBiS: <a href="https://www.wowhead.com/wotlk/item=51909">Neverending Winter</a>. BiS: <a href="https://www.wowhead.com/wotlk/item=50729">Icecrown Glacial Wall</a> (heroic).</p>
+
+      <p><strong>Relic:</strong> Za Triumphy: <a href="https://www.wowhead.com/wotlk/item=47661">Libram of Valiance</a>, <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a> – volba dle sekce 7.</p>
+
+      <h3>Tier sety</h3>
+
+      <h4>Liadrin's Plate (Triumph)</h4>
+      <p>Set tvoří <a href="https://www.wowhead.com/wotlk/item=48649">Faceguard</a>, <a href="https://www.wowhead.com/wotlk/item=48647">Shoulderguards</a>, <a href="https://www.wowhead.com/wotlk/item=48651">Breastplate</a>, <a href="https://www.wowhead.com/wotlk/item=48650">Handguards</a> a <a href="https://www.wowhead.com/wotlk/item=48648">Legguards</a> "of Triumph". Levnější a rychleji dostupná varianta než Lightsworn Plate.</p>
+      <ul>
+        <li><strong>(2) kusy:</strong> cooldown <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a> kratší o 2 s a <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a> způsobí o 5 % větší poškození.</li>
+        <li><strong>(4) kusy:</strong> kratší cooldown <a href="https://www.wowhead.com/wotlk/spell=498">Divine Protection</a> a o 30 s kratší trvání <a href="https://www.wowhead.com/wotlk/spell=25771">Forbearance</a>.</li>
+      </ul>
+
+      <h4>Lightsworn Plate (Frost)</h4>
+      <p>Kompletní set tvoří <a href="https://www.wowhead.com/wotlk/item=51266">Faceguard</a>, <a href="https://www.wowhead.com/wotlk/item=51269">Shoulderguards</a>, <a href="https://www.wowhead.com/wotlk/item=51265">Chestguard</a>, <a href="https://www.wowhead.com/wotlk/item=51267">Handguards</a>, <a href="https://www.wowhead.com/wotlk/item=51268">Legguards</a>. Za Frost emblemy vyjde na 405 emblemů (Head/Chest/Legs po 95, Shoulders/Hands po 60).</p>
+      <ul>
+        <li><strong>(2) kusy:</strong> <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a> způsobí o 20 % větší poškození.</li>
+        <li><strong>(4) kusy:</strong> aktivace <a href="https://www.wowhead.com/wotlk/spell=54428">Divine Plea</a> ti na 10 s dá +12 % dodge (buff <a href="https://www.wowhead.com/wotlk/spell=70760">Deliverance</a>).</li>
+      </ul>
+      <p>4-piece bonus neprochází diminishing returns. V ICC platí na všechny bossy debuff <strong>Chill of the Throne</strong>, který sníží dodge o 20 % – bonus ze setu tuhle ztrátu částečně kompenzuje.</p>
+    </section>
+
+    <section id="rotace">
+      <h2>7. Rotace a priority</h2>
+
+      <h3>Princip rotace 6-9-6</h3>
+      <p>Paladinovy hlavní schopnosti mají cooldown buď <strong>6 vteřin</strong>, nebo <strong>9(8) vteřin</strong> (viz sekce 2). Rotace 6-9-6 znamená, že tyto schopnosti prokládáš tak, aby mezi nimi nebyla prodleva a GCD byl využitý co nejvíc.</p>
+
+      <h3>7.1 PrePull</h3>
+      <p>Kontrola aktivních buffů: <a href="https://www.wowhead.com/wotlk/spell=25780">Righteous Fury</a>, <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a>/<a href="https://www.wowhead.com/wotlk/spell=20375">Seal of Command</a>, Blessings (<a href="https://www.wowhead.com/wotlk/spell=20217">Kings</a>/<a href="https://www.wowhead.com/wotlk/spell=20911">Sanctuary</a>), Well Fed, <a href="https://www.wowhead.com/wotlk/spell=46379">Flask of Stoneblood</a>, Libram.</p>
+      <p><strong>PrePull sekvence:</strong></p>
+      <ul>
+        <li>10s – <a href="https://www.wowhead.com/wotlk/spell=53601">Sacred Shield</a></li>
+        <li>7s – <a href="https://www.wowhead.com/wotlk/spell=54428">Divine Plea</a></li>
+        <li>4s – <a href="https://www.wowhead.com/wotlk/spell=48952">Holy Shield</a></li>
+        <li>3s–1s – <a href="https://www.wowhead.com/wotlk/item=40093">Indestructible Potion</a> + <a href="https://www.wowhead.com/wotlk/spell=31884">Avenging Wrath</a></li>
+      </ul>
+
+      <h3>7.2 Pull</h3>
+      <p><strong>Single target:</strong> Ideální je kombinace <a href="https://www.wowhead.com/wotlk/spell=48827">Avenger's Shield</a> + <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a>. AS pošleš vzduchem a než dopadne na cíl, sešleš HoR. Chce to trochu cviku, zejména, když jsi v pohybu.</p>
+      <p><strong>Adds:</strong> Může být podobné jako single target, ale většinou tam jen naběhnu s <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a> a pokračuju v AoE rotaci.</p>
+
+      <h3>7.3 Tankování jednoho cíle (single target)</h3>
+      <p>Vždy používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=47661">Libram of Valiance</a>. Pokud máme dostatek aggra můžeme přepnout na <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>.</p>
+      <p><strong>Sekvence po Pullu:</strong></p>
+      <ol>
+        <li>(6) <a href="https://www.wowhead.com/wotlk/spell=61411">Shield of the Righteous</a></li>
+        <li>(9) <a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a></li>
+        <li>(6) <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a></li>
+        <li>(9) <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a></li>
+        <li>(6) <a href="https://www.wowhead.com/wotlk/spell=61411">Shield of the Righteous</a></li>
+        <li>(9) <a href="https://www.wowhead.com/wotlk/spell=48952">Holy Shield</a></li>
+        <li>(6) <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a></li>
+        <li>...</li>
+      </ol>
+      <p>Když cíli dropne HP pod 20% používáme v rotaci na místo <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a> pouze <a href="https://www.wowhead.com/wotlk/spell=24275">Hammer of Wrath</a>.</p>
+
+      <h3>7.4 Tankování více cílů (AoE)</h3>
+      <p>Vždy používáme <a href="https://www.wowhead.com/wotlk/spell=20375">Seal of Command</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>.</p>
+      <p><strong>Sekvence po Pullu:</strong></p>
+      <ol>
+        <li>(6) <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a></li>
+        <li>(9) <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a></li>
+        <li>(6) <a href="https://www.wowhead.com/wotlk/spell=61411">Shield of the Righteous</a></li>
+        <li>(9) <a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a></li>
+        <li>(6) <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a></li>
+        <li>(9) <a href="https://www.wowhead.com/wotlk/spell=48952">Holy Shield</a></li>
+        <li>(6) <a href="https://www.wowhead.com/wotlk/spell=61411">Shield of the Righteous</a></li>
+        <li>...</li>
+      </ol>
+
+      <h3>7.5 Tipy v průběhu fightu</h3>
+      <p>Sledovat <a href="https://www.wowhead.com/wotlk/spell=53601">Sacred Shield</a> – cca 10s do vypršení ho obnovit (mezi <a href="https://www.wowhead.com/wotlk/spell=61411">Shield of the Righteous</a> a <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a>). <a href="https://www.wowhead.com/wotlk/spell=48827">Avenger's Shield</a> – Ideální jej použít na silence vzdálených casterů, kteří budou donuceni přiběhnout na melee range. Nezapomínat na používání variace stun/silence/dispell jako výpomoc spolubojovníkům.</p>
+    </section>
+
+    <section id="cooldowny">
+      <h2>8. Cooldowny a utility</h2>
+
+      <h3>Defenzivní cooldowny</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Schopnost</th><th>Kdy použít</th></tr></thead>
+          <tbody>
+            <tr><td><a href="https://www.wowhead.com/wotlk/spell=498">Divine Protection</a></td><td>Cooldown 3 min, snižuje přijaté poškození o 50 %.</td></tr>
+            <tr><td><a href="https://www.wowhead.com/wotlk/spell=642">Divine Shield</a></td><td>Kompletní imunita na 12 s. Aktivuje Forbearance.</td></tr>
+            <tr><td><a href="https://www.wowhead.com/wotlk/spell=31850">Ardent Defender</a></td><td>Pasivní záchranná síť pod 35 % HP.</td></tr>
+            <tr><td><a href="https://www.wowhead.com/wotlk/spell=48788">Lay on Hands</a></td><td>Nouzový self-heal na 100 % HP.</td></tr>
+            <tr><td><a href="https://www.wowhead.com/wotlk/spell=6940">Hand of Sacrifice</a></td><td>Přenese část přijatého poškození z cíle na tebe.</td></tr>
+            <tr><td><a href="https://www.wowhead.com/wotlk/spell=64205">Divine Sacrifice</a></td><td>Plošná verze Hand of Sacrifice.</td></tr>
+            <tr><td>Trinket (např. <a href="https://www.wowhead.com/wotlk/item=50364">Sindragosa's Flawless Fang</a>)</td><td>On-use absorb/damage reduction.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><a href="https://www.wowhead.com/wotlk/spell=70760">Deliverance</a> (4-piece bonus Lightsworn Plate, +12 % dodge po aktivaci Divine Plea) – viz sekce 6.</p>
+
+      <h3>Taunty</h3>
+      <p><a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a> – hlavní taunt na jeden cíl. <a href="https://www.wowhead.com/wotlk/spell=31789">Righteous Defense</a> – plošný taunt na až 3 Addky útočící na stejný target (spoluhráč).</p>
+
+      <h3>Hands, aury a blessingy</h3>
+      <ul>
+        <li><a href="https://www.wowhead.com/wotlk/spell=10278">Hand of Protection</a> – dočasná imunita vůči fyzickému poškození.</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=1044">Hand of Freedom</a> – odstraní/zabrání zpomalení a znehybnění.</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=1038">Hand of Salvation</a> – sníží threat spoluhráče.</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=48942">Devotion Aura</a> – plošná Armor aura.</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=20217">Blessing of Kings</a> vs. <a href="https://www.wowhead.com/wotlk/spell=20911">Blessing of Sanctuary</a>.</li>
+      </ul>
+
+      <h3>Utility</h3>
+      <ul>
+        <li><a href="https://www.wowhead.com/wotlk/spell=853">Hammer of Justice</a> – 6s stun na cíl.</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=48817">Holy Wrath</a> – plošné poškození a stun proti Undead a Demon typům.</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=28730">Arcane Torrent</a> plošný silence (Blood Elf).</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=19752">Divine Intervention</a> – objetuješ se na záchranu spoluhráče při blížícím se wipe.</li>
+        <li><a href="https://www.wowhead.com/wotlk/spell=4987">Cleanse</a> – odstraní Magic, Disease nebo Poison efekt.</li>
+      </ul>
+
+      <h3>Spolupráce s healery</h3>
+      <p>Rozdělujeme si defenzivní spelly pro raid, ohlašujeme přebírání bosse s druhým tankem.</p>
+      <p><strong>Tip pro RHC:</strong> dát si healera do focusu a sledovat jeho stav many – případně ho nechat dopít, záleží na tom váš život XD</p>
+    </section>
+
+    <section id="consumables">
+      <h2>9. Consumables a buffy</h2>
+      <p><strong>Flask:</strong> <a href="https://www.wowhead.com/wotlk/item=46379">Flask of Stoneblood</a> – standardní volba pro tanky, dává velké množství HP navíc na 1 hodinu (buff zůstává i po smrti).</p>
+      <p><strong>Jídlo:</strong> většinou postačí <a href="https://www.wowhead.com/wotlk/item=43015">Fish Feast</a>, případně <a href="https://www.wowhead.com/wotlk/item=42999">Blackened Dragonfin</a> nebo <a href="https://www.wowhead.com/wotlk/item=42994">Rhinolicious Wormsteak</a>.</p>
+      <p><strong>Potiony:</strong> <a href="https://www.wowhead.com/wotlk/item=40093">Indestructible Potion</a> – první v PrePull sekvenci, druhý v průběhu fightu pro maximální využití.</p>
+    </section>
+
+    <section id="addony">
+      <h2>10. Addony a makra</h2>
+      <ul>
+        <li><strong>DBM</strong> – povinné, timery na mechaniky bossů.</li>
+        <li><strong>Omen</strong> – sledování threatu, nutnost pro každého tanka.</li>
+        <li><strong>PallyPower</strong> – přehled a přiřazení Blessingů mezi paladiny v raidu.</li>
+        <li><strong>WeakAuras / KTracker</strong> – vlastní vizuální upozornění na spelly, cooldowny, buffy, debuffy apod.</li>
+        <li><strong>ElvUI</strong> – přehlednější UI, rozložení action barů, využití threat plates.</li>
+        <li><strong>Healbot</strong> – šikovný nástroj nejen pro healery, rychlé přidávání Hands, Dispell, plošný Taunt, Focus.</li>
+        <li><strong>AtlasLoot</strong></li>
+      </ul>
+
+      <h3>Užitečná makra</h3>
+      <p><strong>DISAC bez blowbacku :-D</strong></p>
+      <pre class="note"><code>#showtooltip Divine Sacrifice
+/cast Divine Sacrifice
+/cancelaura Divine Sacrifice</code></pre>
+
+      <p><strong>HOP cancel</strong></p>
+      <pre class="note"><code>/cancelaura Hand of Protection</code></pre>
+
+      <p><strong>Mega Zoomout</strong></p>
+      <pre class="note"><code>/console cameraDistanceMaxFactor 9999</code></pre>
+
+      <p><strong>Shazování debufu bublou</strong></p>
+      <pre class="note"><code>/cast Divine Shield
+/cancelaura Divine Shield</code></pre>
+    </section>
+
+    <section id="profese">
+      <h2>11. Profese</h2>
+
+      <h3>Nejdůležitější profese: Engineering (must have)</h3>
+      <p>Engineering je pro tanka absolutní základ. Klíčové itemy: <a href="https://www.wowhead.com/wotlk/spell=55016">Nitro Boosts</a> (rychlostní tinker na boty), <a href="https://www.wowhead.com/wotlk/spell=63770">Reticulated Armor Webbing</a> (bracer enchant s Armorem) a <a href="https://www.wowhead.com/wotlk/spell=67839">Mind Amplification Dish</a> (helm enchant, dočasná Stamina).</p>
+
+      <h3>Doporučená druhá profese</h3>
+      <ul>
+        <li><strong>Jewelcrafting</strong> – vychází nejlépe díky použití <a href="https://www.wowhead.com/wotlk/item=36767">Solid Dragon's Eye</a>.</li>
+        <li><strong>Blacksmithing</strong> – výhoda více slotů pro gemy umožňuje lepší kombinace statů.</li>
+      </ul>
+
+      <h3>Gathering/craft profese navíc</h3>
+      <ul>
+        <li><strong>Fishing</strong> – nejlepší místo na lov Dragonfin Angelfish (na Blackened Dragonfin) je jezero u Moa'ki Harbor ve Wintergrasp.</li>
+        <li><strong>Cooking</strong> – pro vaření jídel zmíněných v sekci 9.</li>
+      </ul>
+      <p>Pokud levelueš svého paladina od začátku, jeď s <strong>Mining</strong> jako doplňkovou gathering profesí. Pomocí návodů níže zjistíš, co si nechávat na později pro endgame profese.</p>
+
+      <h3>Návody k levelování profesí</h3>
+      <ul>
+        <li><a href="https://www.wow-professions.com/wotlk/engineering-leveling-guide-wotlk-classic">Engineering</a></li>
+        <li><a href="https://www.wow-professions.com/wotlk/jewelcrafting-leveling-guide-wotlk-classic">Jewelcrafting</a></li>
+        <li><a href="https://www.wow-professions.com/wotlk/blacksmithing-leveling-guide-wotlk-classic">Blacksmithing</a></li>
+        <li><a href="https://www.wow-professions.com/wotlk/fishing-leveling-guide-wotlk-classic">Fishing</a></li>
+        <li><a href="https://www.wow-professions.com/wotlk/cooking-leveling-guide-wotlk-classic">Cooking</a></li>
+      </ul>
+    </section>
+
+    <section id="icc">
+      <h2>12. ICC a Ruby Sanctum pro offtanka</h2>
+
+<h3>Lord Marrowgar</h3>
+<p><em>(Taktika je stejná pro normal i heroic obtížnost.)</em></p>
+<p>Po dobu celého fightu používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>.</p>
+<ul>
+  <li>Na start fightu tankujeme bosse na přesném středu místnosti, boss by měl být zády ke dveřím. Bosse si na sobě drží jen BDK tank. Raid nesmí být před ním, boss cleavuje.</li>
+  <li>Dávat pozor na ledové ohně, občas se jimi boss trefí i do tanků.</li>
+  <li>Během <strong>Bone Spike</strong> se snažit používat plošný dmg jako <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a> a <a href="https://www.wowhead.com/wotlk/spell=48827">Avenger's Shield</a>, tak abychom alespoň trochu pomohli dát nějaký dmg do Spiků. Dá se použít i <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a>, jelikož je to taunt, který dává i dmg.</li>
+  <li><strong>Bounce manévr:</strong> Během <strong>Bonestormu</strong> se provádí tzv. Bounce. Boss po castu skočí na nejvzdálenějšího hráče (kterého má stále ve svém dosahu) – z pravidla se jedná o určeného Huntera, který stojí na platformě u dveří. Offtank hned jak začne cast Bonestorm peláší za Hunterem, za běhu dává <a href="https://www.wowhead.com/wotlk/spell=64205">DSAC</a> (Divine Sacrifice), pokud je to po něm vyžadováno. Zachováním pozice místo Huntera takto na sebe Offtank váže další dva skoky Bonestormu.</li>
+  <li>Při doskočení Boss vytvoří kříž z ledových plamenů – je potřeba se jim vyhnout ideálně pohybem do strany. Po odskočení bosse na BDK ledové plameny zůstávají cca 4s, pak zase na pozici.</li>
+  <li>Po skončení Bonestorm se rychle vracíme za BDK kámošem na střed místnosti, abychom se podělili o příchozí dmg.</li>
+</ul>
+
+<h3>Lady Deathwhisper</h3>
+<p><em>(normální obtížnost)</em></p>
+<p>V prvé fázi používáme <a href="https://www.wowhead.com/wotlk/spell=20375">Seal of Command</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>. V druhé fázi používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=47661">Libram of Valiance</a>.</p>
+<p><strong>Fáze 1</strong></p>
+<p>V prvé fázi, kdy se Lady-D shazuje mana shield, je naší starostí hlídat příchozí Addy. S BDK se na začátku domlouváme, kterou stranu si kdo vezme. První Addy se objevují už 10s po pullu! Addy je potřeba držet na sobě. Unholy DK by se měl postarat Gripem o jednu zadní Addku jdoucí od schodů – je dobré si pro ni šetřit jeden taunt a ostatní Addky aggrovat vším ostatním. Rád používám položení <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a> na pozici spawnu jedné Addky 2s před jejich spawnem (podle timeru DBM).</p>
+<p>Existují dva způsoby likvidace Addek: 1) Drží se na bočních schodech, kde je spawn, a tam se zlikvidují (ranged dps na ně switchuje). 2) Addky se trochu naaggrují a táhají se k bossovi – schováte se za sloup u Lady-D tak, aby ho musely addky oběhnout. Pak se provádí zplošnění. Problém u druhé varianty je, že ranged DPS občas rupne v kouli a začne to sypat, než stáhnete addky za sloup, takže urvou aggro – jejich problém :-P</p>
+<p>Mezi tankováním addek se vracíme provádět náš mini dmg do mana shieldu bosse. Na spawn point se vracet 10s před DBM timerem.</p>
+<p><strong>Fáze 2</strong></p>
+<p>V druhé fázi tankuje bosse nejprve BDK, který od bosse dostává stacky <a href="https://www.wowhead.com/wotlk/spell=71204">Touch of Insignificance</a>, které redukují threat generation. Na max 4 stacích ho musíme vystřídat a bosse si tauntnout. Vidíme to i v Omenu, jak začne skákat aggro u top dps.</p>
+<p>Jo a bacha na spirity. Tank je na normál v pohodě, ale kolemjdoucí clothťáky to sfoukne jak svíčku.</p>
+
+<h3>Gunship Battle</h3>
+<p><em>(heroic obtížnost)</em></p>
+<p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=20375">Seal of Command</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>.</p>
+<p>Náš nelehký úkol je držet na sobě všechny addky, které na středu lodi vyskáčou z vytvořeného portálu.</p>
+<p><a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a> točíme na cooldown a první hodíme 1s před tvorbou portálu.</p>
+<p>Rotaci začínáme jako single target na první addku s <a href="https://www.wowhead.com/wotlk/spell=61411">Shield of Righteousness</a>. Druhou addku si hodíme do targetu a vyjde nám <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a>. Třetí addku si hodíme do targetu a dáme <a href="https://www.wowhead.com/wotlk/spell=48827">Avenger's Shield</a>. Pak už to sypeme co to jde a hlavně máme připravený taunt, když to někdo urve. Na další portál stejná taktika.</p>
+<p>V průběhu si hlídáme dopady nepřátelských střel, abychom neztráceli cenné aggro a nelítali všude kolem. Nemusíme běhat daleko, pořád se držet u toho středu.</p>
+<p><strong>Saurfang starší</strong> nám tam dost pomáhá s držením addek. Pokud je nějaká na něm, tak nebudeme hladovci a samozřejmě mu ji necháme.</p>
+
+<h3>Deathbringer Saurfang</h3>
+<p><em>(heroic obtížnost)</em></p>
+<p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a>. Cca před prvními beasty switchneme z <a href="https://www.wowhead.com/wotlk/item=47661">Libram of Valiance</a> na <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>. BDK má na startu velké aggro a když na něm neubere, tak nám to může utrhnout. Je dobré mít aktivovaný "Target of Target" a kontrolovat si na kom mladej Saurfang visí.</p>
+<p>Na začátku tankuje BDK, který nejprve nasype 5x <a href="https://www.wowhead.com/wotlk/spell=59131">Icy Touch</a>, aby vybudoval dostatek aggra. Po posledním by vám to měl callnout a vy tauntem přebíráte bosse (počítání Icy Touch v tom dmg bordelu moc nejde).</p>
+<p>Po celý zbytek fightu si s BDK přehazujete <a href="https://www.wowhead.com/wotlk/spell=72410">Rune of Blood</a>. Když ji máte, NESMÍTE tankovat bosse! Bossovi to přidává HP a blood power. To samé u BDK, kterého máme ideálně ve focusu a v momentě, kdy runu dostane dáme taunt. První runu dostanete vy. BDK si ihned přebírá bosse a vy by jste měli ubrat s aggrováním – používáme jen <a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a>, <a href="https://www.wowhead.com/wotlk/spell=48952">Holy Shield</a> a obnovujeme <a href="https://www.wowhead.com/wotlk/spell=53601">Sacred Shield</a>, nic víc.</p>
+<p>Buďte připraveni na <a href="https://www.wowhead.com/wotlk/spell=72385">Boiling Blood</a>, které budou přistávat do raidu. Slabší kusy potřebují házet <a href="https://www.wowhead.com/wotlk/spell=10278">Hand of Protection</a>. Nevýhodou je váš range, takže nemůžete házet na všechny, někteří rdps jsou mimo dosah.</p>
+<p>Tak a teď to přijde – největší shitstorm. Po zbytek fightu, když runa skočí na BDK a spawnou se beasti, tauntnete bosse a začnete sypat. V ten moment nesmíte používat plošné spelly jako <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a> a <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a>, aby jste nenatáhli beasty! Do toho po druhém kicku beastů od sehraných druidů vyberete jednu beastu a dáte jí <a href="https://www.wowhead.com/wotlk/spell=853">Hammer of Justice</a>. Je dobré vybrat takovou, co je nejblíže k raidu a nejvíce je ohrožuje. A do toho hlídáte utíkající beasty, když jsou téměř u vašich kámošů, tak používáme nouzový taunt! Občas se ještě stane, že v tom bordelu někdo chytí Boiling Blood a snažíte se hodit Hand of Protection – uff.</p>
+<p>Buďte připraveni vypomáhat se svým Hand of Protection nebo <a href="https://www.wowhead.com/wotlk/spell=64205">Divine Sacrifice</a>, zejména u lidí co schytali <a href="https://www.wowhead.com/wotlk/spell=72293">Mark of the Fallen Champion</a> nebo když má boss nad 70% blood power – pak dáva docela bomby.</p>
+
+<h3>Festergut</h3>
+<p><em>(heroic obtížnost)</em></p>
+<p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=47661">Libram of Valiance</a>. Na začátku nemusíme dávat Pre-Potku.</p>
+<p>První polovinu fightu obvykle tankuje BDK a vy se chováte jako mDPS. Takže klasika, stackujete s ostatními a přebíháte mezi kopýtkem a chodidlem aby jste se vyhnuli <a href="https://www.wowhead.com/wotlk/spell=72297">Malleable Goo</a>, odbíháte s kaštanama <a href="https://www.wowhead.com/wotlk/spell=69279">Gas Spore</a> a necháte se očkovat <a href="https://www.wowhead.com/wotlk/spell=69291">Inoculated</a>.</p>
+<p>BDK máte klasicky ve focusu a hlídáte jeho stacky <a href="https://www.wowhead.com/wotlk/spell=72219">Gastric Bloat</a>. Na 9 stacku ho musíte v tankování vystřídat jinak praskne jak balónek sraček! Nezapomenout mít vše defenzivní nahozené, jako na klasický pull.</p>
+<p>Taknujete klasika single target rotaci. Když náhodou dostanete kaštan <a href="https://www.wowhead.com/wotlk/spell=69279">Gas Spore</a>, natlačíte se pod bosse, ale nesmíte ho otočit do raidu! Tak by měla <a href="https://www.wowhead.com/wotlk/spell=69291">Inoculated</a> skočit na mDPS za bossem.</p>
+<p>Opět používáte Hand of Protection a Divine Sacrafice dle zadání Raid Leadera.</p>
+<p><strong>Tip:</strong> Můžete své tankování prodloužit shozením stacků <a href="https://www.wowhead.com/wotlk/spell=72219">Gastric Bloat</a> pomocí bubliny <a href="https://www.wowhead.com/wotlk/spell=642">Divine Shield</a>. Bublu musíte mít na makru i s cancel aurou a vždy před použitím musíte použít <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a>, aby se aggro udrželo na vás!</p>
+
+<h3>Rotface</h3>
+<p><em>(heroic obtížnost)</em></p>
+<p>Po celou dobu fightu používáne <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=47661">Libram of Valiance</a>.</p>
+<p>ProtPally má na starosti jen bosse, takže je to ideálka na provedení perfektního pullu s pre-potkou, křídly <a href="https://www.wowhead.com/wotlk/spell=31884">Avenging Wrath</a> a <a href="https://www.wowhead.com/wotlk/spell=48827">Avenger's Shield</a>. Začínáme single target rotací. BDK má na starosti tahání Ooze po obvodu místnosti.</p>
+<p>První mechanika se děje při castu <a href="https://www.wowhead.com/wotlk/spell=69508">Slime Spray</a>, kdy se boss na někoho otočí a začne plivat malý oozy. ProtPally není měkkota a vždy se mu postaví čelem, zbytek raidu na melee range musí podbíhat za něj.</p>
+<p>Pomáhat paladinům s házením <a href="https://www.wowhead.com/wotlk/spell=1044">Hand of Freedom</a> na BDK, když probíhá sračkama.</p>
+<p>V momentě, kdy se BDK podaří dostat velkou Ooze na 5 stacků dochází k jejímu výbuchu. Zde se velice hodí addon DBM, který začne odpočítávat 5 vteřin do výbuchu. V době odpočítávání raid na melee range STOJÍ na místě a čeká! Vy se musíte stacknout na zbytek raidu. Jakmile se odpočítávání dostane na nulu, podbíhá se. Buďte připraveni na výbuch a dle instrukcí Raid Leadera použít <a href="https://www.wowhead.com/wotlk/spell=64205">Divine Sacrifice</a>. Jakmile malé oozy z výbuchu dopadnou (a boss zrovna neplive) otáčíte bosse od raidu. Raid ideálně zůstává stát aby mohl ihned dávat DMG a neztrácel čas s přesunem.</p>
+<p>Kdyby se vám poštěstio a zbyla na vás role tahání Ooze: Můžete si <a href="https://www.wowhead.com/wotlk/spell=1044">Hand of Freedom</a> dávat sami. Pamatovat, že při tahání oozy koukat (postavou) od raidu do stěny. Používat spelly na dálku jako <a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a>, <a href="https://www.wowhead.com/wotlk/spell=48827">Avenger's Shield</a> nebo <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a> a nechat jím oozu projít. Samozřejmě oba taunty.</p>
+
+<h3>Professor Putricide</h3>
+<p><em>(normal obtížnost)</em></p>
+<p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=47661">Libram of Valiance</a>. Fight má tři fáze.</p>
+<p>ProtPally většinou chodí do Abomky a tankuje až ve třetí fázi. Na pull běžíte s <a href="https://www.wowhead.com/wotlk/spell=55016">Nitro Boosts</a> ke stolku a kliknete na něj. Než se proměníte v Abomku, pár vteřin to trvá, ale to že jste lektvar vypili poznáte podle černého kouře, který vám jde od huby. Na Abomce máte 3 spelly 1) Pití louže <a href="https://www.wowhead.com/wotlk/spell=70360">Eat Ooze</a>, 2) Zpomalení o 50% na 20s + DMG <a href="https://www.wowhead.com/wotlk/spell=70539">Regurgitated Ooze</a> a 3) DMG + redukce armoru <a href="https://www.wowhead.com/wotlk/spell=70542">Mutated Slash</a>.</p>
+<p>První fáze se tlačí tak, aby se první zelená Ooza zabila až ve druhé fázi. Pokud to nevychází Raid Leader oznámí stop DMG do bosse a nejprve se zabije Ooza. Vaším úkolem v prvé fázi je vypít první dvě louže tak, aby jste měli 50% energie na zpomalení Oozy.</p>
+<p>Dobrá taktika na získání co nejvíce energie z louží je nejprve jednu upít na minimum, ale nedopíjet úplně. Doběhnete ke druhé a zase upijete jen na minimum, vracíte se k prvé. Takto mezi nimi běháte a postupně upíjíte. Louže úplně dopijete jen pokud se blíží mezifáze (v prvé fázi vám tedy stačí dosáhnout 50% energie a můžete vše na jistotu dopít) nebo máte 100% energie a nepotřebujete tedy dopíjet.</p>
+<p>Ve druhé fázi bedlivě sledujete především timer na <a href="https://www.wowhead.com/wotlk/spell=70341">Slime Puddle</a> cast. Než padnou další nové louže, musíte mít dopito. Dále sledujete spawn zelené a červené Oozy – musíte mít vždy alespoň 50% energie na zpomalení. Je dobré mít při spawnu Oozy vždy dopito! Když jste blízko Oozy při zpomalení, většinou máte pár vteřin do nových Slime Puddle, můžete tedy na Ooze udělat nějaký DMG. Jen pozor, Oozy mají maličký hitbox – musíte stát skoro na ní, aby jste autoattackem něco nasekali. Maximálně 2-3 vteřiny po dopadu nových louží je musíte utíkat vypít aby se to stíhalo.</p>
+<p>Ve třetí fázi se proměníte zpátky – nezapomeňte na sebe naházet všechny defenzivní záležitosti jako na pre-pullu a až pak se zapojte do bitvy. Bosse budete tankovat na max 3 stacky <a href="https://www.wowhead.com/wotlk/spell=72451">Mutated Plague</a>. Bosse budete tankovat v předem určeném pořadí. První stack si ideálně vezme HolyPala, pak přebírá BDK na 2/3 následně Hunter jeden a pak je řada na ProtPallu – Zde pozor, sledujete Huntera, který má přebírat stack (např v Healbotu). Jakmile ho dostane, musíte tauntnout nejprve <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a> (Prof se na vás rozeběhne, ale po chvíli se otočí zpátky) a následně <a href="https://www.wowhead.com/wotlk/spell=31789">Righteous Defence</a>. Pak by se Vás už měl držet. Ideálně než dostanete 3 stacky Mutated Plague, je Proffesor dole. Pokud ne, mže si další stack vzít druhý Hunter a BDK si to z něj vezme na konec.</p>
+<p>Nezapomenout ve 3tí fázi používat defky: <a href="https://www.wowhead.com/wotlk/spell=6940">Hand of Sacrafice</a> na BDK až dostane 3tí stack, <a href="https://www.wowhead.com/wotlk/spell=64205">Divine Sacrafice</a> situačně (většinou calluje Raid Leader) a <a href="https://www.wowhead.com/wotlk/spell=498">Divine Protection</a>, když máte vy 3 stacky. Pokud je k dispozici, můžete si od priesta vyžádat <a href="https://www.wowhead.com/wotlk/spell=33206">Pain Suppression</a></p>
+<p><em>(heroic obtížnost)</em></p>
+<p>Taktika zůstává stejná/podobná s jistými rozdíly a DPS output raidu musí být větší.</p>
+<p>V mezifázích už není Tear Gas, ale Prof povolá obě Oozy najednou = na mezifázi musíte mít napito 100% energie. Držet se předchozí taktiky pití + buffy raidu by vám rychlejší dobití energie měly umožnit. Zpomalujeme nejprve červenou (priorita) a pak hned zelenou. Pokud můžeme, pomáháme s DMG do červené.</p>
+<p>Pozor! Při stání v loužích dostáváte i jako Abomka DMG – občas je nutné si říci o heal.</p>
+<p><strong>Tip:</strong> Dopíjení s přebíháním mezi loužemi je dobré trénovat již na normální obtížnost, i když to není úplně potřeba.</p>
+
+<h3>Blood Prince Council</h3>
+<p><em>(heroic obtížnost)</em></p>
+<p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a>. <a href="https://www.wowhead.com/wotlk/item=47661">Libram of Valiance</a> na začátek a v momentě, když má <a href="https://www.wowhead.com/wotlk/spell=70952">Invocation of Blood</a> Keleseth, přepínáme na <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>.</p>
+<p>Jako ProtPally tankujeme Valanara a Taldarama. S oběma stojíme na vrchní straně schodiště uprostřed. Na pull dáváme <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a> na Valanara a koukáme okem po Taldaramovi – pokud jsou nástřely v pořádku, měli bychom ho mít na sobě a plošnými spelly si vybudovat aggro i na něm.</p>
+<p>Jako první má vždy <a href="https://www.wowhead.com/wotlk/spell=70952">Invocation of Blood</a> Valanar = schodiště máme za zády a mDPS dává bídu z vrchní podesty (ta u portálů). Stojíme jako skála a na <a href="https://www.wowhead.com/wotlk/spell=72039">Empowered Shock Vortex</a> dáváme dle požadavku Raid Leadera <a href="https://www.wowhead.com/wotlk/spell=64205">Divine Sacrafice</a>. Když nás nedejbože někdo při votexu kopne, nejprve mu vynadáme a pak pomocí <a href="https://www.wowhead.com/wotlk/spell=55016">Nitro Boosts</a> pelášíme zpátky na místo. Dáváme pozor na stacky <a href="https://www.wowhead.com/wotlk/spell=72999">Shadow Prison</a> – nikdy víc jak 10 = bez Nitro Boosts opatrně!</p>
+<p>V případě že má <a href="https://www.wowhead.com/wotlk/spell=70952">Invocation of Blood</a> Taldaram = stojíme na podestě čelem dolů ze schodiště a DPS seká ze schodů. Pozice DPS je důležitá pro maximální soukování <a href="https://www.wowhead.com/wotlk/spell=72040">Conjure Empowered Flame</a>, který letí jejich směrem do raidu. Velký pozor dávat na <a href="https://www.wowhead.com/wotlk/spell=72037">Shock Vortex</a>, které zmetek Valanar vytváří kolem. Vortex začíná jako malé bílé kolečko na zemi než bouchne. DBM hlásí že je "Vortex near", stačí poslouchat. Utíkáme s oběma bossy mimo dosah Vortexu do strany tak, abychom zachovali pozici ideálně na hraně podesty a byli pořád čelem ze schodiště dolů.</p>
+<p>V případě, že má <a href="https://www.wowhead.com/wotlk/spell=70952">Invocation of Blood</a> Keleseth = tankuje BDK. Oba kámoše stále držíme na své pozici. Opět dávat pozor na Shock Vortex a sledovat svoje HP. Občas se stane že na vás healeři trochu šetří (věnují se druhému tankovi) – situačně si můžete loupnout nějakou defku.</p>
+<p>Bossové se takto na random střídají do konce fightu.</p>
+
+<h3>Blood-Queen Lana'thel</h3>
+<p><em>(heroic obtížnost)</em></p>
+<p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>.</p>
+<p>U téhle bitky můžete jednou rukou vyťukávat svoji rotaci a druhou popíjet pivko :-D Na Pullu začíná tankovat BDK, které na začátek lépe vybuduje věší množství aggra. Tankuje se tam kde BQL stojí a zády se opíráme o stěnu. S BDK jste spojeni <a href="https://www.wowhead.com/wotlk/spell=70821">Blood Mirror</a> a sdílíte tak příchozí DMG. V momentě, kdy se BQL zakousne do prvního člověka přebírá tankování Armor-Over Powered ProtPally. První bite by mělo dostat rDPS = BQL odskočí do raidu a v ten moment dáte taunt. Zároveň první bite hlásí DBM ;-) Když skočí do strany a přibíhá zpět, snažíme se jí srovnat na střed – většinou stačí odběhnout k jednomu ze sloupků na kraji platformy a vrátit se zpět na střed.</p>
+<p>Až do flight fáze jen točíte rotaci a obnovujete <a href="https://www.wowhead.com/wotlk/spell=53601">Sacred Shield</a>. Jediné na co musíte myslet je aktivace <a href="https://www.wowhead.com/wotlk/spell=64205">Divine Sacrafice</a> dle pokynů Raid Leadera. Dává se ze zásady na <a href="https://www.wowhead.com/wotlk/spell=71340">Pact of the Darkfallen</a> aka Linky.</p>
+<p>Na flight fázi se snažíte ještě před fearem odběhnout mimo dosah plamenů po <a href="https://www.wowhead.com/wotlk/spell=71861">Swarming Shadows</a>, které by mohl nějaký nešťastník v blízkosti ponechat. Až BQL docastí <a href="https://www.wowhead.com/wotlk/spell=71772">Bloodbolt Whirl</a>, začne pomalu klesat. V ten moment jí tauntnout kombinací <a href="https://www.wowhead.com/wotlk/spell=48827">Avenger's Shield</a> a <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a> a pelášit na svojí pozici.</p>
+<p>Až po flight fázi obnovit <a href="https://www.wowhead.com/wotlk/item=40093">Indestructible Potion</a> (pokud by to tak vyšlo, tak neobnovujte na flight fázi!)</p>
+
+<h3>Valithria Dreamwalker</h3>
+<p><em>(heroic obtížnost)</em></p>
+<p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=20375">Seal of Command</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>.</p>
+<p>Nepoužívejte při pre-pull sekvenci <a href="https://www.wowhead.com/wotlk/spell=54428">Divine Plea</a> – tu si šetříme na Abomku. Na pull na sebe natáhněte Mágy – raid je seseká.</p>
+<p>Celý fight jen číháme na <a href="https://www.wowhead.com/wotlk/npc=37886">Gluttonous Abomination</a>. Jakmile se Abomka objeví, stáhneme ji <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a> a šoupneme na ni <a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a>. Pak ji musíme dovést na pozici ke sloupu mezi bránami a ke sloupu se otočit zády. Zde ji držíme než zkape. Jakmile padne k zemi, vylézají z ní <a href="https://www.wowhead.com/wotlk/npc=37907">Rot Worm</a>. Ideální je v tu chvíli dát <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a>, když jsou alespoň 3 venku tak <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a> a až vylezou všichni tak <a href="https://www.wowhead.com/wotlk/spell=48817">Holy Wrath</a>, který si pro toto vždy šetříme. Červíci mají tendenci utíkat na Healery, kteří mají veliké aggro!!!</p>
+<p>Abomka by měla stát v místě, kudy probíhají <a href="https://www.wowhead.com/wotlk/npc=37863">Suppresser</a>. Těm můžete dávat DMG navíc tím, že probíhají přes <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a>, chytnou <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a> nebo <a href="https://www.wowhead.com/wotlk/spell=48827">Avenger's Shield</a>, dokonce i <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a> dává DMG (i když je tauntnout nejde)</p>
+<p>Při držení Abomky koukat po <a href="https://www.wowhead.com/wotlk/npc=37868">Risen Archmage</a> a <a href="https://www.wowhead.com/wotlk/npc=36791">Blazing Skeleton</a>. Zkoušet je na sebe tauntnout a využít tak plošného DMG raidu. Na konci fightu, když je Abomka v kontrolu se staráme zejména o tuto dvojici. Na Mágy lze používat <a href="https://www.wowhead.com/wotlk/spell=853">Hammer of Justice</a>.</p>
+
+<h3>Sindragosa</h3>
+<p><em>(normální obtížnost)</em></p>
+<p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>.</p>
+<p>Tady si budete polovinu času připadat tak trochu k ničemu :-D Tankuje BDK. Na pull mu dáte <a href="https://www.wowhead.com/wotlk/spell=6940">Hand of Sacrafice</a>, který střídáte s dalším Paladinem pokaždé v moment, když Sindra přistává.</p>
+<p>Celou první fázi se chováte jako mDPS. Takže klasika – odbíháte na <a href="https://www.wowhead.com/wotlk/spell=70123">Blistering Cold</a> nebo jste v kostce <a href="https://www.wowhead.com/wotlk/spell=70157">Ice Tomb</a> nebo do ní dáváte svůj mini DMG.</p>
+<p>Na druhou fázi je váš jediný a nejdůležitější úkol ve správný moment vystřídat BDK, který dostává stacky <a href="https://www.wowhead.com/wotlk/spell=70127">Mystic Buffet</a>. BDK by na sobě měl mít maximálně 6-7 stacků – ne více, nebo začne kapat. Většinou to vychází po Blistering Cold a následujícím <a href="https://www.wowhead.com/wotlk/spell=69649">Frost Breath</a> – musíte ho stále sledovat ve focusu nebo v Healbotu.</p>
+<p>Na střídání nezapomeňte mít vše nahozené (Holy Shield, Sacred Shield, Divine Plea, Indistructible potion). Postavíte se přesně na místo, kde stojí BDK a dáte <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a>, pokračujete single target rotací. Na timeru DBM vás zajímá jediná věc a to Frost Breath. Musíte jich dát tak 2-3 a na každý z nich musíte mít defku – začíná se od slabších k silnějším, eventuálně si můžete o nějakou říci (Pain Suppression, Hand of Sacrafice). Takže např: 1) <a href="https://www.wowhead.com/wotlk/spell=64205">Divine Sacrafice</a> 2) <a href="https://www.wowhead.com/wotlk/item=50361">Sindragosa's Flawless Fang</a> 3) <a href="https://www.wowhead.com/wotlk/spell=498">Divine Protection</a>. (Když nemáte trinket říkejte si o defku)</p>
+<p>Po 3 Frost Breath vás musí vystřídat BDK, máte tolik stacků Mystic Buffet, že by vám další defka moc nepomohla.</p>
+<p>Pozor při střídání na lidi, na které letí kostka! Ať vás to taky nezmrazí. Většinou to bereme trochu obloukem od místa "na tělo" kam se kostky dávají ;-)</p>
+
+<h3>The Lich King</h3>
+<p><em>(normální obtížnost)</em></p>
+<p>Na první fázi používáme <a href="https://www.wowhead.com/wotlk/spell=20375">Seal of Command</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>. V první mezifázi přepínáme na <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=47661">Libram of Valiance</a>.</p>
+<p><strong>První fáze:</strong></p>
+<p>LKáčko tankuje BDK, vaší starostí jsou především <a href="https://www.wowhead.com/wotlk/npc=37698">Shambling Horror</a>. Vteřinu před pullem si šoupnete <a href="https://www.wowhead.com/wotlk/item=40093">Indestructible Potion</a> a na pull dáte <a href="https://www.wowhead.com/wotlk/spell=6940">Hand of Sacrafice</a> na BDK. Až potom si naházíte svoje pre-pull spellka. Nejprve začněte DMG do LK a až začnou vylézat <a href="https://www.wowhead.com/wotlk/npc=37695">Drudge Ghoul</a>, zkuste je na sebe pomocí DMG natáhnout (nepoužívejte taunt!).</p>
+<p>5 vteřin před spawnem Shambling Horror se vracíte na svoji pozici. Na Shamblu použijeme <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a>. Shambly a Drudge Ghoul držíte na své pozici u sloupu a to vždy tak, aby byli zády k raidu. DMG dáváme primárně do Shambly, ten se nám nesmí utrhnout! Pozice kam jsou Shamblíci nasměrovaní je důležitá, dávají totiž <a href="https://www.wowhead.com/wotlk/spell=72149">Shockwave</a>, který vypne každého kromě tanků. Navíc Shamblíka občas popadne amok a dostane <a href="https://www.wowhead.com/wotlk/spell=72143">Enrage</a> – poznáme to tak, že zčervená. Je to docela průser, protože vás v ten moment může Shockwave sundat i když jste tank. V tu samou chvíli náš kámoš Hunter jeho Enrage shazuje pomocí <a href="https://www.wowhead.com/wotlk/spell=19801">Tranquilizing Shot</a> eventuálně to můžeme udělat i my s <a href="https://www.wowhead.com/wotlk/spell=853">Hammer of Justice</a>.</p>
+<p>Jak toho zmrda sundat? Použijeme proti němu taktiku, kterou LK zkouší na nás = pomocí <a href="https://www.wowhead.com/wotlk/spell=70338">Necrotic Plague</a>. Dotky na Shamblu nosí spoluhráči, kteří se za něj chodí "vyléčit". Dotka skočí na Shamblu, ale taky může cestovat na Drudge Ghoul, kterých se snažíme natáhnout co nejvíce. Čím vícekrát přeskočí, tím více Shambla dostane :-P Ideální způsob jak k sobě pro tento účel natáhnout co nejvíce Ghoulů je pomocí <a href="https://www.wowhead.com/wotlk/spell=31789">Righteous Defense</a> – osvědčila se mi metoda mít tento plošný taunt nabindovaný v Healbotu. Zde sleduju Warriory a Retriny, kterým trochu tikají HPčka = jsou na nich Ghoulové. Tadááá...</p>
+<p>Po nějaké chvíli se objeví druhý Shambl – teď to teprve začne být zajímavé. Taunt úplně stejně jako prvého. Bedlivě je sledujte a pro případ že chytí Enrage oba najednou mějte připravený <a href="https://www.wowhead.com/wotlk/spell=48817">Holy Wrath</a>.</p>
+<p><strong>První mezifáze:</strong></p>
+<p>Když se blíží mezifáze na 70%HP LK, celý raid už se sune na kraj platformy. Také začněte couvat na platformu a hlídejte si při tom pozici Shamblů, aby neposlali Shockwave do raidu! Shambly a Ghouly na sobě držíte, dokud nedotiká Necrotic Plague a vše před vámi není mrtvé. Necrotic Plague obvykle jako na posledního skočí na vás = dispell <a href="https://www.wowhead.com/wotlk/spell=4987">Cleanse</a>.</p>
+<p>Přepínáte Seal a Libram a valíte asistovat BDK s <a href="https://www.wowhead.com/wotlk/npc=36701">Raging Spirit</a>. Dobrá taktika je stát od spiritů na samotném kraji platformy, nechat je na BDK a sypat to do nich. Raging Spirit dává <a href="https://www.wowhead.com/wotlk/spell=69242">Soul Shriek</a>, který nejen zbídačí každého kromě tanka na nulu, ale způsobuje SILENCE. Pokud stojíte správně, netrefí vás to. Soul Shriek hlídáme na timeru DBM a v momentě, kdy BDK dostane Silence ho hned dispellujeme pomocí Cleanse. (to bývá i práce Retrin, ale přes čísílka občas nevidí)</p>
+<p><strong>Druhá fáze:</strong></p>
+<p>V momentě, kdy začne druhá fáze používáte Righteous Defense a z BDK stáhnete všechny zbývající Raging Spirit. Hned potom na BDK hážete Hand of Sacrafice! Spirity táhnete směrem na střed k LK, ideálně před zbytkem raidu. Stále sledujete timer pro Soul Shriek a pokud ho má spirit poslat, okamžitě ho točíme směrem od raidu!</p>
+<p>Zde se budete pohybovat se zbytkem raidu až do chvíle, než vás BDK požádá o střídačku na LK. Se zbytkem raidu řešíte klasicky <a href="https://www.wowhead.com/wotlk/spell=72762">Defile</a> a <a href="https://www.wowhead.com/wotlk/npc=36609">Val'kyr Shadowguard</a>. BDK vás bude potřebovat na vystřídání u LK kvůli defkám na <a href="https://www.wowhead.com/wotlk/spell=69409">Soul Reaper</a>. Ten sledujeme na timeru DBM a čekáme na pokyn. Naší jedinou obranou proti Soul Reaper je Divine Protection. V případě, že bychom měli souknout i druhý, potřebujete Divine sacrafice a <a href="https://www.wowhead.com/wotlk/item=50361">Sindragosa's Flawless Fang</a>. BDK si LK přebere zpět a my jedeme zase svoje se zbytkem raidu.</p>
+<p><strong>Druhá mezifáze:</strong></p>
+<p>Stejná taktika s Raging Spirit jako v prvé.</p>
+<p><strong>Třetí fáze:</strong></p>
+<p>Poslední Raging Spirit opět z BDK tauntneme pomocí Righteous Defense a dáme mu Hand of Sacrafice. Se spiritama nyní zůstávám na kraji platformy a nikam neběžím. Snažím se je nasměrovat tak, aby případné Soul Shriek šly z platformy pryč směrem od raidu. Následně se přidáváme ke zbytku raidu. Zde nás mohou potřebovat s naším Divine Protection na souk dalšího Soul Reaper nebo na vybouchání <a href="https://www.wowhead.com/wotlk/spell=70498">Vile Spirits</a>. Zde jen pozor, pokud máte tankovat LK = v této fázi ho taháme přes celou platformu tam a zpátky. Tah na druhou stranu vždy začíná castem Vile Spirits, na kraji se s LK otočíme (tank zády ke středu, raid je na kraji platformy)</p>
+
+<h2>Ruby Sanctum</h2>
+
+<h3>Baltharus the Warborn</h3>
+<p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>.</p>
+<p>BDK tankuje samotného Baltharuse. ProtPally se stará o jednu, někdy i obě jeho kopie. Kopii tankujeme zády opření o strom, aby nešel DMG kopie do raidu (<a href="https://www.wowhead.com/wotlk/spell=40504">Cleave</a>) a aby nás neodhodila tvorba druhé kopie (<a href="https://www.wowhead.com/wotlk/spell=74509">Repelling Wave</a>). Když tankujeme kopie, dáváme pozor na <a href="https://www.wowhead.com/wotlk/spell=75125">Blade Tempest</a>, na který vždy dáváme defku – na první Divine Sacrafice a na druhou Divine Protection. Kopie před Blade Tempest vždy trochu naroste, takže víte, kdy máte být na defku připraveni. Když je pomalé DPS, musíme si o další defku říci (Pain Supression, Hand of Sacrafice, Divine Sacrafice)</p>
+
+<h3>Saviana Ragefire</h3>
+<p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>.</p>
+<p>Savianu na sobě drží primárně BDK a my stojíme s ním. V případě, že jeden z tanků dostane <a href="https://www.wowhead.com/wotlk/spell=74453">Flame Beacon</a>, druhý ho musí zastoupit a bosse si tauntnout. Saviana se tankuje aby směřovala do jezera a trochu ji natočit směrem od raidu kvůli <a href="https://www.wowhead.com/wotlk/spell=74403">Flame Breath</a>.</p>
+
+<h3>General Zarithrian</h3>
+<p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=20375">Seal of Command</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>.</p>
+<p>Pokud bosse tankuje BDK jsou naší starostí Addky <a href="https://www.wowhead.com/wotlk/npc=39814">Onyx Flamecaller</a>. Addky tankujeme u jednoho ze vstupů a ideálně má druhý vstup třetí tank. Klasická AoE rotace. Na třetí vlnu Addek (už jich je 6) je potřeba točit defenzivní cooldowny.</p>
+<p>Pokud tankujeme bosse, jedeme single target rotaci se <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a>. Boss vyvolává <a href="https://www.wowhead.com/wotlk/spell=74384">Intimidating Roar</a> – sledujete jeho cast a na konci musíte dát Hand of Reckoning, jinak se vám utrhne. Boss dává stacky <a href="https://www.wowhead.com/wotlk/spell=74367">Cleave Armor</a>.</p>
+<p>Na 4 stacku je nutné si je shodit – buď vám někdo hodí Hand of Protection (musíte mít připravenou cancel auru – makro) a těsně před HOP musíte dát Hand of Reckoning.</p>
+<p>Druhou možností je si shodit stacky Cleave Armor sám pomocí <a href="https://www.wowhead.com/wotlk/spell=642">Divine Shield</a> (neljépe na makru s okamžitou cancel aurou). Opět platí, že před shozením musíte dát Hand of Reckoning, aby se bos neutrhnul. Druhou možnost dokážete lépe načasovat.</p>
+
+<h3>Halion</h3>
+<p><em>(normální obtížnost)</em></p>
+<p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=47661">Libram of Valiance</a>.</p>
+<p>Úlohou ProtPally většinou bývá tankování ve FIRE.</p>
+<p><strong>První fáze:</strong></p>
+<p>Pre-pull, Pull s křídly a single target rotace. Defky používáte zejména, když padá <a href="https://www.wowhead.com/wotlk/spell=74648">Meteor Strike</a> a raid bosse podbíhá (healeři jsou v pohybu a nemohou moc healovat). Jako defky používáme Divine Sacrafice, Divine Protection, trinkety, defky od někoho z raidu – Hand of Sacrafice, Pain Suppression, Divine Sacrafice.</p>
+<p><strong>Druhá fáze:</strong></p>
+<p>Jakmile DBM vyhlásí druhou fázi, musíte na BDK (Shadow tanka) hodit Hand of Sacrafice. Následuje taneček s healerem, který s vámi zůstává nahoře :-D A čekáte. Jakmile DBM zahlásí Stage 3 soon, nahoďte Sacred shield.</p>
+<p><strong>Třetí fáze:</strong></p>
+<p>V moment, kdy DBM zahlásí Stage 3 dáváte Divine Protection. Objeví se Halion a hned ho tauntnete Hand of Reckoning. Dohodíte Holy Shield a jedete rotaci. Princip s defkami je stejný jako v prvé fázi.</p>
+<p><strong>Vyhýbání ohňům:</strong></p>
+<p>V průběhu fightu budete nuceni se občas vyhnout ohňům z Meteor Strike. Pro raid je lepší když couvnete nebo jdete blíže k Halionovi (boss má velký hitbox, tak by ho to nemělo nikam posouvat). Když budete nuceni uhýbat do strany, vždy to ohlašujte raidu!</p>
+
+
+    </section>
+
+    <footer>Autor: <span class="todo">Ivlii</span></footer>
+  </main>
+</div>
+
+<script>
+  // Zvýraznění aktuální sekce v bočním menu
+  const links = document.querySelectorAll('nav.toc a');
+  const map = new Map([...links].map(a => [a.getAttribute('href').slice(1), a]));
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        map.get(e.target.id)?.classList.add('active');
+      }
+    });
+  }, { rootMargin: '0px 0px -70% 0px' });
+  document.querySelectorAll('main section[id]').forEach(s => io.observe(s));
+</script>
+
+</body>
+</html>

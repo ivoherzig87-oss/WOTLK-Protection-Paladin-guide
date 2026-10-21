@@ -165,7 +165,7 @@
         <li><strong>Avoidance</strong> (vyhýbání) – útok tě vůbec nezasáhne. Patří sem dodge, parry, miss a u paladina navíc block. Čím vyšší avoidance, tím méně útoků na tebe vůbec dopadne. Mezi dodge a parry je rozdíl v efektivitě: <strong>stackovat dodge je efektivnější než parry</strong> (někteří bossové majíparry haste – parírovaný útok zrychluje bossovi další swing, což zvyšuje riziko rychlejšího poškození).</li>
         <li><strong>Mitigation</strong> (zmírnění) – útok tě zasáhne, ale sníží se jeho dopad. Patří sem armor (snižuje fyzické poškození) a block value (o kolik zmírní zablokovaný útok).</li>
       </ul>
-      <p>Paladin je jediný tank, který kombinuje obojí naráz díky <a href="https://www.wowhead.com/wotlk/spell=48952">Holy Shield</a>, který zvyšuje šanci na block a zároveň zvyšuje block value.</p>
+      <p>Paladin je jediný tank, který kombinuje obojí naráz díky <a href="https://www.wowhead.com/wotlk/spell=48952">Holy Shield</a>, který zvyšuje šanci na block.</p>
 
       <h3>Crit immunity a defense cap</h3>
       <p>Tank nesmí dostat critical hit od bosse, protože crit dokáže zabít i dobře vybaveného tanka jedním zásahem. Tomu se říká crit immunity a dosáhne se navýšením defense skillu.</p>
@@ -173,8 +173,8 @@
         <table>
           <thead><tr><th>Situace</th><th>Defense cap</th></tr></thead>
           <tbody>
-            <tr><td>Heroic dungeony (RHC)</td><td><strong>535</strong></td></tr>
-            <tr><td>Raid bossové (ICC, RS)</td><td><strong>540</strong></td></tr>
+            <tr><td>Heroic dungeony 82 lvl (RHC)</td><td><strong>535</strong></td></tr>
+            <tr><td>Raid bossové 83 lvl (ICC, RS)</td><td><strong>540</strong></td></tr>
           </tbody>
         </table>
       </div>
@@ -186,14 +186,14 @@
       </ul>
 
       <h3>Threat</h3>
-      <p>Základ threatu tvoří <a href="https://www.wowhead.com/wotlk/spell=25780">Righteous Fury</a> spolu s talentem <a href="https://www.wowhead.com/wotlk/spell=20470">Improved Righteous Fury</a> – bez nich generuješ zlomek threatu a nikdy neudržíš aggro na vybaveném DPS. Righteous Fury musí být zapnuté vždy, když tankuješ.</p>
+      <p>Základ threatu tvoří <a href="https://www.wowhead.com/wotlk/spell=25780">Righteous Fury</a>  – bez něj generuješ zlomek threatu a nikdy neudržíš aggro na vybaveném DPS. Righteous Fury musí být zapnuté vždy, když tankuješ.</p>
       <p>Hlavní zdroje threatu se dělí podle délky cooldownu:</p>
       <p><strong>Schopnosti s cooldownem 6 s</strong></p>
       <ul>
         <li><a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a></li>
         <li><a href="https://www.wowhead.com/wotlk/spell=61411">Shield of Righteousness</a></li>
       </ul>
-      <p><strong>Schopnosti s cooldownem 9 s</strong> (od nejlepšího po nejslabší zdroj threatu)</p>
+      <p><strong>Schopnosti s cooldownem 8 s</strong> (od nejlepšího po nejslabší zdroj threatu)</p>
       <ol>
         <li><a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a> (situačně <a href="https://www.wowhead.com/wotlk/spell=20271">Judgement of Light</a>)</li>
         <li><a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a></li>
@@ -214,15 +214,16 @@
     <section id="talenty">
       <h2>3. Talenty a glyphy</h2>
       <p>Build: Protection 56 bodů, Retribution 15 bodů, Holy 0 bodů. <a href="https://www.wowhead.com/wotlk/talent-calc/paladin/-15005135223102311333312321-502302012_001nmh11q3021xqq31rjv41rjh51rk3/1aBEfGHJKMnQRstVZWXyILOu2ACDFhJ" target="_blank" rel="noopener">Otevřít v kalkulačce</a></p>
+      <p>Pro generování více threatu lze přesunout jeden talent z Improved Hammer of Justice do Crusade. Výsledný cooldown <a href="https://www.wowhead.com/wotlk/spell=853">Hammer of Justice</a> bude 40s což stále postačí na spawn Beastů u DBS a Valkýry u LK.</p>
 
 <!-- ===== ZAČÁTEK KOMPONENTY: HTML + JS (vlož do sekce 3) ===== -->
 <div class="tt" id="talent-tree"></div>
 <script>
 (function () {
   // Data stromů (pozice, max ranky, spell ID) – needitovat
-  const TREES = {"prot":{"name":"Protection","bg":"https://wow.zamimg.com/images/wow/talents/backgrounds/classic/383.jpg","t":[["Divinity",0,1,5,[63646],"spell_holy_blindingheal"],["Divine Strength",0,2,5,[20262],"ability_golemthunderclap"],["Stoicism",1,0,3,[31844,31845,53519],"spell_holy_stoicism"],["Guardian's Favor",1,1,2,[20174],"spell_holy_sealofprotection"],["Anticipation",1,2,5,[20096],"spell_magic_lesserinvisibilty"],["Divine Sacrifice",2,0,1,[64205],"spell_holy_powerwordbarrier"],["Improved Righteous Fury",2,1,3,[20468],"spell_holy_sealoffury"],["Toughness",2,2,5,[20143],"spell_holy_devotion"],["Divine Guardian",3,0,2,[53527,53530],"spell_holy_powerwordbarrier"],["Improved Hammer of Justice",3,1,2,[20487],"spell_holy_sealofmight"],["Improved Devotion Aura",3,2,3,[20138],"spell_holy_devotionaura"],["Blessing of Sanctuary",4,1,1,[20911],"spell_nature_lightningshield"],["Reckoning",4,2,5,[20177,20179,20181,20180,20182],"spell_holy_blessingofstrength"],["Sacred Duty",5,0,2,[31848],"spell_holy_divineintervention"],["One Handed Weapon Specialization",5,2,3,[20196],"inv_sword_20"],["Spiritual Attunement",6,0,2,[31785,33776],"spell_holy_revivechampion"],["Holy Shield",6,1,1,[20925],"classic_spell_holy_blessingofprotection"],["Ardent Defender",6,2,3,[31850],"spell_holy_ardentdefender"],["Redoubt",7,0,3,[20127,20130,20135],"ability_defend"],["Combat Expertise",7,2,3,[31858],"spell_holy_weaponmastery"],["Touched By the Light",8,0,3,[53590],"ability_paladin_touchedbylight"],["Avenger's Shield",8,1,1,[31935],"spell_holy_avengersshield"],["Guarded By the Light",8,2,2,[53583,53585],"ability_paladin_gaurdedbythelight"],["Shield of the Templar",9,1,3,[53709],"ability_paladin_shieldofthetemplar"],["Judgements of the Just",9,2,2,[53695],"ability_paladin_judgementsofthejust"],["Hammer of the Righteous",10,1,1,[53595],"ability_paladin_hammeroftherighteous"]]},"ret":{"name":"Retribution","bg":"https://wow.zamimg.com/images/wow/talents/backgrounds/classic/381.jpg","t":[["Deflection",0,1,5,[20060],"ability_parry"],["Benediction",0,2,5,[20101],"spell_frost_windwalkon"],["Improved Judgements",1,0,2,[25956],"spell_holy_righteousfury"],["Heart of the Crusader",1,1,3,[20335],"spell_holy_holysmite"],["Improved Blessing of Might",1,2,2,[20042,20045],"spell_holy_fistofjustice"],["Vindication",2,0,2,[9452,26016],"spell_holy_vindication"],["Conviction",2,1,5,[20117],"spell_holy_retributionaura"],["Seal of Command",2,2,1,[20375],"ability_warrior_innerrage"],["Pursuit of Justice",2,3,2,[26022],"spell_holy_persuitofjustice"],["Eye for an Eye",3,0,2,[9799,25988],"spell_holy_eyeforaneye"],["Sanctity of Battle",3,2,3,[32043,35396,35397],"spell_holy_holysmite"],["Crusade",3,3,3,[31866],"spell_holy_crusade"],["Two Handed Weapon Specialization",4,0,3,[20111],"inv_hammer_04"],["Sanctified Retribution",4,2,1,[31869],"spell_holy_mindvision"],["Vengeance",5,1,3,[20049,20056,20057],"ability_racial_avatar"],["Divine Purpose",5,2,2,[31871],"spell_holy_divinepurpose"],["The Art of War",6,0,2,[53486,53488],"ability_paladin_artofwar"],["Repentance",6,1,1,[20066],"spell_holy_prayerofhealing"],["Judgements of the Wise",6,2,3,[31876],"ability_paladin_judgementofthewise"],["Fanaticism",7,1,3,[31879],"spell_holy_fanaticism"],["Sanctified Wrath",7,2,2,[53375],"ability_paladin_sanctifiedwrath"],["Swift Retribution",8,0,3,[53379,53484,53648],"ability_paladin_swiftretribution"],["Crusader Strike",8,1,1,[35395],"spell_holy_crusaderstrike"],["Sheath of Light",8,2,3,[53501],"ability_paladin_sheathoflight"],["Righteous Vengeance",9,1,3,[53380],"ability_paladin_righteousvengeance"],["Divine Storm",10,1,1,[53385],"ability_paladin_divinestorm"]]},"holy":{"name":"Holy","bg":"https://wow.zamimg.com/images/wow/talents/backgrounds/classic/382.jpg","t":[["Spiritual Focus",0,1,5,[20205],"spell_arcane_blink"],["Seals of the Pure",0,2,5,[20224,20225,20330],"ability_thunderbolt"],["Healing Light",1,0,3,[20237],"spell_holy_holybolt"],["Divine Intellect",1,1,5,[20257],"spell_nature_sleep"],["Unyielding Faith",1,2,2,[9453,25836],"spell_holy_unyieldingfaith"],["Aura Mastery",2,0,1,[31821],"spell_holy_auramastery"],["Illumination",2,1,5,[20210,20212],"spell_holy_greaterheal"],["Improved Lay On Hands",2,2,2,[20234],"spell_holy_layonhands"],["Improved Concentration Aura",3,0,3,[20254],"spell_holy_mindsooth"],["Improved Blessing of Wisdom",3,2,2,[20244],"spell_holy_sealofwisdom"],["Blessed Hands",3,3,2,[53660],"ability_paladin_blessedhands"],["Pure of Heart",4,0,2,[31822],"spell_holy_pureofheart"],["Divine Favor",4,1,1,[20216],"spell_holy_heal"],["Sanctified Light",4,2,3,[20359],"spell_holy_healingaura"],["Purifying Power",5,0,2,[31825],"spell_holy_purifyingpower"],["Holy Power",5,2,5,[5923,5924,5925,5926,25829],"spell_holy_power"],["Light's Grace",6,0,3,[31833,31835],"spell_holy_lightsgrace"],["Holy Shock",6,1,1,[20473],"spell_holy_searinglight"],["Blessed Life",6,2,3,[31828],"spell_holy_blessedlife"],["Sacred Cleansing",7,0,3,[53551],"ability_paladin_sacredcleansing"],["Holy Guidance",7,2,5,[31837],"spell_holy_holyguidance"],["Divine Illumination",8,0,1,[31842],"spell_holy_divineillumination"],["Judgements of the Pure",8,2,5,[53671,53673,54151,54154,54155],"ability_paladin_judgementofthepure"],["Infusion of Light",9,1,2,[53569,53576],"ability_paladin_infusionoflight"],["Enlightened Judgements",9,2,2,[53556],"ability_paladin_enlightenedjudgements"],["Beacon of Light",10,1,1,[53563],"ability_paladin_beaconoflight"]]}};
+  const TREES = {"prot":{"name":"Protection","bg":"https://wow.zamimg.com/images/wow/talents/backgrounds/classic/383.jpg","t":[["Divinity",0,1,5,[63646,63647,63648,63649,63650],"spell_holy_blindingheal"],["Divine Strength",0,2,5,[20262,20263,20264,20265,20266],"ability_golemthunderclap"],["Stoicism",1,0,3,[31844,31845,53519],"spell_holy_stoicism"],["Guardian's Favor",1,1,2,[20174,20175],"spell_holy_sealofprotection"],["Anticipation",1,2,5,[20096,20097,20098,20099,20100],"spell_magic_lesserinvisibilty"],["Divine Sacrifice",2,0,1,[64205],"spell_holy_powerwordbarrier"],["Improved Righteous Fury",2,1,3,[20468,20469,20470],"spell_holy_sealoffury"],["Toughness",2,2,5,[20143,20144,20145,20146,20147],"spell_holy_devotion"],["Divine Guardian",3,0,2,[53527,53530],"spell_holy_powerwordbarrier"],["Improved Hammer of Justice",3,1,2,[20487,20488],"spell_holy_sealofmight"],["Improved Devotion Aura",3,2,3,[20138,20139,20140],"spell_holy_devotionaura"],["Blessing of Sanctuary",4,1,1,[20911],"spell_nature_lightningshield"],["Reckoning",4,2,5,[20177,20179,20181,20180,20182],"spell_holy_blessingofstrength"],["Sacred Duty",5,0,2,[31848,31849],"spell_holy_divineintervention"],["One-Handed Weapon Specialization",5,2,3,[20196,20197,20198],"inv_sword_20"],["Spiritual Attunement",6,0,2,[31785,33776],"spell_holy_revivechampion"],["Holy Shield",6,1,1,[20925],"classic_spell_holy_blessingofprotection"],["Ardent Defender",6,2,3,[31850,31851,31852],"spell_holy_ardentdefender"],["Redoubt",7,0,3,[20127,20130,20135],"ability_defend"],["Combat Expertise",7,2,3,[31858,31859,31860],"spell_holy_weaponmastery"],["Touched by the Light",8,0,3,[53590,53591,53592],"ability_paladin_touchedbylight"],["Avenger's Shield",8,1,1,[31935],"spell_holy_avengersshield"],["Guarded by the Light",8,2,2,[53583,53585],"ability_paladin_gaurdedbythelight"],["Shield of the Templar",9,1,3,[53709,53710,53711],"ability_paladin_shieldofthetemplar"],["Judgements of the Just",9,2,2,[53695,53696],"ability_paladin_judgementsofthejust"],["Hammer of the Righteous",10,1,1,[53595],"ability_paladin_hammeroftherighteous"]]},"ret":{"name":"Retribution","bg":"https://wow.zamimg.com/images/wow/talents/backgrounds/classic/381.jpg","t":[["Deflection",0,1,5,[20060,20061,20062,20063,20064],"ability_parry"],["Benediction",0,2,5,[20101,20102,20103,20104,20105],"spell_frost_windwalkon"],["Improved Judgements",1,0,2,[25956,25957],"spell_holy_righteousfury"],["Heart of the Crusader",1,1,3,[20335,20336,20337],"spell_holy_holysmite"],["Improved Blessing of Might",1,2,2,[20042,20045],"spell_holy_fistofjustice"],["Vindication",2,0,2,[9452,26016],"spell_holy_vindication"],["Conviction",2,1,5,[20117,20118,20119,20120,20121],"spell_holy_retributionaura"],["Seal of Command",2,2,1,[20375],"ability_warrior_innerrage"],["Pursuit of Justice",2,3,2,[26022,26023],"spell_holy_persuitofjustice"],["Eye for an Eye",3,0,2,[9799,25988],"spell_holy_eyeforaneye"],["Sanctity of Battle",3,2,3,[32043,35396,35397],"spell_holy_holysmite"],["Crusade",3,3,3,[31866,31867,31868],"spell_holy_crusade"],["Two-Handed Weapon Specialization",4,0,3,[20111,20112,20113],"inv_hammer_04"],["Sanctified Retribution",4,2,1,[31869],"spell_holy_mindvision"],["Vengeance",5,1,3,[20049,20056,20057],"ability_racial_avatar"],["Divine Purpose",5,2,2,[31871,31872],"spell_holy_divinepurpose"],["The Art of War",6,0,2,[53486,53488],"ability_paladin_artofwar"],["Repentance",6,1,1,[20066],"spell_holy_prayerofhealing"],["Judgements of the Wise",6,2,3,[31876,31877,31878],"ability_paladin_judgementofthewise"],["Fanaticism",7,1,3,[31879,31880,31881],"spell_holy_fanaticism"],["Sanctified Wrath",7,2,2,[53375,53376],"ability_paladin_sanctifiedwrath"],["Swift Retribution",8,0,3,[53379,53484,53648],"ability_paladin_swiftretribution"],["Crusader Strike",8,1,1,[35395],"spell_holy_crusaderstrike"],["Sheath of Light",8,2,3,[53501,53502,53503],"ability_paladin_sheathoflight"],["Righteous Vengeance",9,1,3,[53380,53381,53382],"ability_paladin_righteousvengeance"],["Divine Storm",10,1,1,[53385],"ability_paladin_divinestorm"]]},"holy":{"name":"Holy","bg":"https://wow.zamimg.com/images/wow/talents/backgrounds/classic/382.jpg","t":[["Spiritual Focus",0,1,5,[20205,20206,20207,20208,20209],"spell_arcane_blink"],["Seals of the Pure",0,2,5,[20224,20225,20330,20331,20332],"ability_thunderbolt"],["Healing Light",1,0,3,[20237,20238,20239],"spell_holy_holybolt"],["Divine Intellect",1,1,5,[20257,20258,20259,20260,20261],"spell_nature_sleep"],["Unyielding Faith",1,2,2,[9453,25836],"spell_holy_unyieldingfaith"],["Aura Mastery",2,0,1,[31821],"spell_holy_auramastery"],["Illumination",2,1,5,[20210,20212,20213,20214,20215],"spell_holy_greaterheal"],["Improved Lay on Hands",2,2,2,[20234,20235],"spell_holy_layonhands"],["Improved Concentration Aura",3,0,3,[20254,20255,20256],"spell_holy_mindsooth"],["Improved Blessing of Wisdom",3,2,2,[20244,20245],"spell_holy_sealofwisdom"],["Blessed Hands",3,3,2,[53660,53661],"ability_paladin_blessedhands"],["Pure of Heart",4,0,2,[31822,31823],"spell_holy_pureofheart"],["Divine Favor",4,1,1,[20216],"spell_holy_heal"],["Sanctified Light",4,2,3,[20359,20360,20361],"spell_holy_healingaura"],["Purifying Power",5,0,2,[31825,31826],"spell_holy_purifyingpower"],["Holy Power",5,2,5,[5923,5924,5925,5926,25829],"spell_holy_power"],["Light's Grace",6,0,3,[31833,31835,31836],"spell_holy_lightsgrace"],["Holy Shock",6,1,1,[20473],"spell_holy_searinglight"],["Blessed Life",6,2,3,[31828,31829,31830],"spell_holy_blessedlife"],["Sacred Cleansing",7,0,3,[53551,53552,53553],"ability_paladin_sacredcleansing"],["Holy Guidance",7,2,5,[31837,31838,31839,31840,31841],"spell_holy_holyguidance"],["Divine Illumination",8,0,1,[31842],"spell_holy_divineillumination"],["Judgements of the Pure",8,2,5,[53671,53673,54151,54154,54155],"ability_paladin_judgementofthepure"],["Infusion of Light",9,1,2,[53569,53576],"ability_paladin_infusionoflight"],["Enlightened Judgements",9,2,2,[53556,53557],"ability_paladin_enlightenedjudgements"],["Beacon of Light",10,1,1,[53563],"ability_paladin_beaconoflight"]]}};
   // Buildy: ranky v pořadí talentů z TREES. Další build (např. "AoE") přidej jako další klíč.
-  const BUILDS = {"Raid":{"calc":"https://www.wowhead.com/wotlk/talent-calc/paladin/-15005135223102311333312321-502302012","prot":[1,5,0,0,5,1,3,5,2,2,3,1,0,2,3,1,1,3,3,3,3,1,2,3,2,1],"ret":[5,0,2,3,0,2,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"holy":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}};
+  const BUILDS = {"Raid":{"calc":"https://www.wowhead.com/wotlk/talent-calc/paladin/-05005135223102311333312321-50230201200100000000000000","prot":[0,5,0,0,5,1,3,5,2,2,3,1,0,2,3,1,1,3,3,3,3,1,2,3,2,1],"ret":[5,0,2,3,0,2,0,1,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"holy":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}};
 
   const root = document.getElementById('talent-tree');
   const names = Object.keys(BUILDS);
@@ -318,7 +319,7 @@
         <li><strong>Defense</strong> – do dosažení capu (535 RHC / 540 raid). Nad cap už je zbytečná.</li>
         <li><strong>Stamina</strong> – základ přežití.</li>
         <li><strong>Hit</strong> – do capu 8 % (melee).</li>
-        <li><strong>Expertise</strong> – do capu 16 (26 se sealem a glyphem).</li>
+        <li><strong>Expertise</strong> – (na začátku nejméně důležitá z výše uvedených) do capu 16 (26 se sealem a glyphem).</li>
         <li><strong>Block Value</strong> – zvyšuje mitigation z bloknutých útoků a threat z Holy Shield.</li>
         <li><strong>Strength</strong> – zvyšuje attack power (a tím threat) a block value.</li>
         <li><strong>Armor</strong> – snižuje fyzické poškození.</li>
@@ -435,8 +436,8 @@
     <section id="rotace">
       <h2>7. Rotace a priority</h2>
 
-      <h3>Princip rotace 6-9-6</h3>
-      <p>Paladinovy hlavní schopnosti mají cooldown buď <strong>6 vteřin</strong>, nebo <strong>9(8) vteřin</strong> (viz sekce 2). Rotace 6-9-6 znamená, že tyto schopnosti prokládáš tak, aby mezi nimi nebyla prodleva a GCD byl využitý co nejvíc.</p>
+      <h3>Princip rotace 6-8-6</h3>
+      <p>Paladinovy hlavní schopnosti mají cooldown buď <strong>6 vteřin</strong>, nebo <strong>8 vteřin</strong> (viz sekce 2). Rotace 6-8-6 znamená, že tyto schopnosti prokládáš tak, aby mezi nimi nebyla prodleva a GCD byl využitý co nejvíc.</p>
 
       <h3>7.1 PrePull</h3>
       <p>Kontrola aktivních buffů: <a href="https://www.wowhead.com/wotlk/spell=25780">Righteous Fury</a>, <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a>/<a href="https://www.wowhead.com/wotlk/spell=20375">Seal of Command</a>, Blessings (<a href="https://www.wowhead.com/wotlk/spell=20217">Kings</a>/<a href="https://www.wowhead.com/wotlk/spell=20911">Sanctuary</a>), Well Fed, <a href="https://www.wowhead.com/wotlk/spell=46379">Flask of Stoneblood</a>, Libram.</p>
@@ -457,11 +458,11 @@
       <p><strong>Sekvence po Pullu:</strong></p>
       <ol>
         <li>(6) <a href="https://www.wowhead.com/wotlk/spell=61411">Shield of the Righteous</a></li>
-        <li>(9) <a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a></li>
+        <li>(8) <a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a></li>
         <li>(6) <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a></li>
-        <li>(9) <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a></li>
+        <li>(8) <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a></li>
         <li>(6) <a href="https://www.wowhead.com/wotlk/spell=61411">Shield of the Righteous</a></li>
-        <li>(9) <a href="https://www.wowhead.com/wotlk/spell=48952">Holy Shield</a></li>
+        <li>(8) <a href="https://www.wowhead.com/wotlk/spell=48952">Holy Shield</a></li>
         <li>(6) <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a></li>
         <li>...</li>
       </ol>
@@ -472,11 +473,11 @@
       <p><strong>Sekvence po Pullu:</strong></p>
       <ol>
         <li>(6) <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a></li>
-        <li>(9) <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a></li>
+        <li>(8) <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a></li>
         <li>(6) <a href="https://www.wowhead.com/wotlk/spell=61411">Shield of the Righteous</a></li>
-        <li>(9) <a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a></li>
+        <li>(8) <a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a></li>
         <li>(6) <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a></li>
-        <li>(9) <a href="https://www.wowhead.com/wotlk/spell=48952">Holy Shield</a></li>
+        <li>(8) <a href="https://www.wowhead.com/wotlk/spell=48952">Holy Shield</a></li>
         <li>(6) <a href="https://www.wowhead.com/wotlk/spell=61411">Shield of the Righteous</a></li>
         <li>...</li>
       </ol>
@@ -616,11 +617,13 @@
 <p>V prvé fázi používáme <a href="https://www.wowhead.com/wotlk/spell=20375">Seal of Command</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>. V druhé fázi používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=47661">Libram of Valiance</a>.</p>
 <p><strong>Fáze 1</strong></p>
 <p>V prvé fázi, kdy se Lady-D shazuje mana shield, je naší starostí hlídat příchozí Addy. S BDK se na začátku domlouváme, kterou stranu si kdo vezme. První Addy se objevují už 10s po pullu! Addy je potřeba držet na sobě. Unholy DK by se měl postarat Gripem o jednu zadní Addku jdoucí od schodů – je dobré si pro ni šetřit jeden taunt a ostatní Addky aggrovat vším ostatním. Rád používám položení <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a> na pozici spawnu jedné Addky 2s před jejich spawnem (podle timeru DBM).</p>
-<p>Existují dva způsoby likvidace Addek: 1) Drží se na bočních schodech, kde je spawn, a tam se zlikvidují (ranged dps na ně switchuje). 2) Addky se trochu naaggrují a táhají se k bossovi – schováte se za sloup u Lady-D tak, aby ho musely addky oběhnout. Pak se provádí zplošnění. Problém u druhé varianty je, že ranged DPS občas rupne v kouli a začne to sypat, než stáhnete addky za sloup, takže urvou aggro – jejich problém :-P</p>
+<p>Existují dva způsoby likvidace Addek: 1) Drží se na bočních schodech, kde je spawn, a tam se zlikvidují (ranged dps na ně switchuje). 2) Addky se naaggrují (Consecration, Judgement, Hand of Reckoning a navrch silence) a táhají se k bossovi – schováte se za sloup u Lady-D tak, aby ho musely addky oběhnout. Pak se provádí zplošnění. Problém u druhé varianty je, že ranged DPS občas rupne v kouli a začne to sypat, než stáhnete addky za sloup, takže urvou aggro – jejich problém :-P</p>
 <p>Mezi tankováním addek se vracíme provádět náš mini dmg do mana shieldu bosse. Na spawn point se vracet 10s před DBM timerem.</p>
 <p><strong>Fáze 2</strong></p>
 <p>V druhé fázi tankuje bosse nejprve BDK, který od bosse dostává stacky <a href="https://www.wowhead.com/wotlk/spell=71204">Touch of Insignificance</a>, které redukují threat generation. Na max 4 stacích ho musíme vystřídat a bosse si tauntnout. Vidíme to i v Omenu, jak začne skákat aggro u top dps.</p>
 <p>Jo a bacha na spirity. Tank je na normál v pohodě, ale kolemjdoucí clothťáky to sfoukne jak svíčku.</p>
+
+<p><em>(heroická obtížnost 10man in progress)</em></p>
 
 <h3>Gunship Battle</h3>
 <p><em>(heroic obtížnost)</em></p>
@@ -662,14 +665,14 @@
 <p><em>(normal obtížnost)</em></p>
 <p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=53736">Seal of Corruption</a> a <a href="https://www.wowhead.com/wotlk/item=47661">Libram of Valiance</a>. Fight má tři fáze.</p>
 <p>ProtPally většinou chodí do Abomky a tankuje až ve třetí fázi. Na pull běžíte s <a href="https://www.wowhead.com/wotlk/spell=55016">Nitro Boosts</a> ke stolku a kliknete na něj. Než se proměníte v Abomku, pár vteřin to trvá, ale to že jste lektvar vypili poznáte podle černého kouře, který vám jde od huby. Na Abomce máte 3 spelly 1) Pití louže <a href="https://www.wowhead.com/wotlk/spell=70360">Eat Ooze</a>, 2) Zpomalení o 50% na 20s + DMG <a href="https://www.wowhead.com/wotlk/spell=70539">Regurgitated Ooze</a> a 3) DMG + redukce armoru <a href="https://www.wowhead.com/wotlk/spell=70542">Mutated Slash</a>.</p>
-<p>První fáze se tlačí tak, aby se první zelená Ooza zabila až ve druhé fázi. Pokud to nevychází Raid Leader oznámí stop DMG do bosse a nejprve se zabije Ooza. Vaším úkolem v prvé fázi je vypít první dvě louže tak, aby jste měli 50% energie na zpomalení Oozy.</p>
+<p>První fáze se tlačí tak, aby se první zelená Ooza zabila až ve druhé fázi. Pokud to nevychází Raid Leader oznámí stop DMG do bosse a nejprve se zabije Ooza. Vaším úkolem v prvé fázi je vypít první dvě louže tak, aby jste měli 45% energie na zpomalení Oozy.</p>
 <p>Dobrá taktika na získání co nejvíce energie z louží je nejprve jednu upít na minimum, ale nedopíjet úplně. Doběhnete ke druhé a zase upijete jen na minimum, vracíte se k prvé. Takto mezi nimi běháte a postupně upíjíte. Louže úplně dopijete jen pokud se blíží mezifáze (v prvé fázi vám tedy stačí dosáhnout 50% energie a můžete vše na jistotu dopít) nebo máte 100% energie a nepotřebujete tedy dopíjet.</p>
-<p>Ve druhé fázi bedlivě sledujete především timer na <a href="https://www.wowhead.com/wotlk/spell=70341">Slime Puddle</a> cast. Než padnou další nové louže, musíte mít dopito. Dále sledujete spawn zelené a červené Oozy – musíte mít vždy alespoň 50% energie na zpomalení. Je dobré mít při spawnu Oozy vždy dopito! Když jste blízko Oozy při zpomalení, většinou máte pár vteřin do nových Slime Puddle, můžete tedy na Ooze udělat nějaký DMG. Jen pozor, Oozy mají maličký hitbox – musíte stát skoro na ní, aby jste autoattackem něco nasekali. Maximálně 2-3 vteřiny po dopadu nových louží je musíte utíkat vypít aby se to stíhalo.</p>
+<p>Ve druhé fázi bedlivě sledujete především timer na <a href="https://www.wowhead.com/wotlk/spell=70341">Slime Puddle</a> cast. Než padnou další nové louže, musíte mít dopito. Dále sledujete spawn zelené a červené Oozy – musíte mít vždy alespoň 45% energie na zpomalení. Je dobré mít při spawnu Oozy vždy dopito! Když jste blízko Oozy při zpomalení, většinou máte pár vteřin do nových Slime Puddle, můžete tedy na Ooze udělat nějaký DMG. Jen pozor, Oozy mají maličký hitbox – musíte stát skoro na ní, aby jste autoattackem něco nasekali. Maximálně 2-3 vteřiny po dopadu nových louží je musíte utíkat vypít aby se to stíhalo.</p>
 <p>Ve třetí fázi se proměníte zpátky – nezapomeňte na sebe naházet všechny defenzivní záležitosti jako na pre-pullu a až pak se zapojte do bitvy. Bosse budete tankovat na max 3 stacky <a href="https://www.wowhead.com/wotlk/spell=72451">Mutated Plague</a>. Bosse budete tankovat v předem určeném pořadí. První stack si ideálně vezme HolyPala, pak přebírá BDK na 2/3 následně Hunter jeden a pak je řada na ProtPallu – Zde pozor, sledujete Huntera, který má přebírat stack (např v Healbotu). Jakmile ho dostane, musíte tauntnout nejprve <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a> (Prof se na vás rozeběhne, ale po chvíli se otočí zpátky) a následně <a href="https://www.wowhead.com/wotlk/spell=31789">Righteous Defence</a>. Pak by se Vás už měl držet. Ideálně než dostanete 3 stacky Mutated Plague, je Proffesor dole. Pokud ne, mže si další stack vzít druhý Hunter a BDK si to z něj vezme na konec.</p>
 <p>Nezapomenout ve 3tí fázi používat defky: <a href="https://www.wowhead.com/wotlk/spell=6940">Hand of Sacrafice</a> na BDK až dostane 3tí stack, <a href="https://www.wowhead.com/wotlk/spell=64205">Divine Sacrafice</a> situačně (většinou calluje Raid Leader) a <a href="https://www.wowhead.com/wotlk/spell=498">Divine Protection</a>, když máte vy 3 stacky. Pokud je k dispozici, můžete si od priesta vyžádat <a href="https://www.wowhead.com/wotlk/spell=33206">Pain Suppression</a></p>
 <p><em>(heroic obtížnost)</em></p>
 <p>Taktika zůstává stejná/podobná s jistými rozdíly a DPS output raidu musí být větší.</p>
-<p>V mezifázích už není Tear Gas, ale Prof povolá obě Oozy najednou = na mezifázi musíte mít napito 100% energie. Držet se předchozí taktiky pití + buffy raidu by vám rychlejší dobití energie měly umožnit. Zpomalujeme nejprve červenou (priorita) a pak hned zelenou. Pokud můžeme, pomáháme s DMG do červené.</p>
+<p>V mezifázích už není Tear Gas, ale Prof povolá obě Oozy najednou = na mezifázi musíte mít napito 90% energie. Držet se předchozí taktiky pití + buffy raidu by vám rychlejší dobití energie měly umožnit. Zpomalujeme nejprve červenou (priorita) a pak hned zelenou. Pokud můžeme, pomáháme s DMG do červené.</p>
 <p>Pozor! Při stání v loužích dostáváte i jako Abomka DMG – občas je nutné si říci o heal.</p>
 <p><strong>Tip:</strong> Dopíjení s přebíháním mezi loužemi je dobré trénovat již na normální obtížnost, i když to není úplně potřeba.</p>
 
@@ -694,7 +697,7 @@
 <p><em>(heroic obtížnost)</em></p>
 <p>Po celý fight používáme <a href="https://www.wowhead.com/wotlk/spell=20375">Seal of Command</a> a <a href="https://www.wowhead.com/wotlk/item=45145">Libram of the Sacred Shield</a>.</p>
 <p>Nepoužívejte při pre-pull sekvenci <a href="https://www.wowhead.com/wotlk/spell=54428">Divine Plea</a> – tu si šetříme na Abomku. Na pull na sebe natáhněte Mágy – raid je seseká.</p>
-<p>Celý fight jen číháme na <a href="https://www.wowhead.com/wotlk/npc=37886">Gluttonous Abomination</a>. Jakmile se Abomka objeví, stáhneme ji <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a> a šoupneme na ni <a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a>. Pak ji musíme dovést na pozici ke sloupu mezi bránami a ke sloupu se otočit zády. Zde ji držíme než zkape. Jakmile padne k zemi, vylézají z ní <a href="https://www.wowhead.com/wotlk/npc=37907">Rot Worm</a>. Ideální je v tu chvíli dát <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a>, když jsou alespoň 3 venku tak <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a> a až vylezou všichni tak <a href="https://www.wowhead.com/wotlk/spell=48817">Holy Wrath</a>, který si pro toto vždy šetříme. Červíci mají tendenci utíkat na Healery, kteří mají veliké aggro!!!</p>
+<p>Celý fight jen číháme na <a href="https://www.wowhead.com/wotlk/npc=37886">Gluttonous Abomination</a>. Jakmile se Abomka objeví, stáhneme ji <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a> a šoupneme na ni <a href="https://www.wowhead.com/wotlk/spell=53408">Judgement of Wisdom</a>. Pak ji musíme dovést na pozici ke sloupu mezi bránami a ke sloupu se otočit zády. Zde ji držíme než zkape. Jakmile padne k zemi, vylézají z ní <a href="https://www.wowhead.com/wotlk/npc=37907">Rot Worm</a>. Ideální je v tu chvíli dát <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a>, když jsou alespoň 3 venku tak <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a> a až vylezou všichni tak sypeme AOE jak to jen jde. Červíci mají tendenci utíkat na Healery, kteří mají veliké aggro!!!</p>
 <p>Abomka by měla stát v místě, kudy probíhají <a href="https://www.wowhead.com/wotlk/npc=37863">Suppresser</a>. Těm můžete dávat DMG navíc tím, že probíhají přes <a href="https://www.wowhead.com/wotlk/spell=48819">Consecration</a>, chytnou <a href="https://www.wowhead.com/wotlk/spell=53595">Hammer of the Righteous</a> nebo <a href="https://www.wowhead.com/wotlk/spell=48827">Avenger's Shield</a>, dokonce i <a href="https://www.wowhead.com/wotlk/spell=62124">Hand of Reckoning</a> dává DMG (i když je tauntnout nejde)</p>
 <p>Při držení Abomky koukat po <a href="https://www.wowhead.com/wotlk/npc=37868">Risen Archmage</a> a <a href="https://www.wowhead.com/wotlk/npc=36791">Blazing Skeleton</a>. Zkoušet je na sebe tauntnout a využít tak plošného DMG raidu. Na konci fightu, když je Abomka v kontrolu se staráme zejména o tuto dvojici. Na Mágy lze používat <a href="https://www.wowhead.com/wotlk/spell=853">Hammer of Justice</a>.</p>
 
@@ -727,6 +730,8 @@
 <p><strong>Třetí fáze:</strong></p>
 <p>Poslední Raging Spirit opět z BDK tauntneme pomocí Righteous Defense a dáme mu Hand of Sacrafice. Se spiritama nyní zůstávám na kraji platformy a nikam neběžím. Snažím se je nasměrovat tak, aby případné Soul Shriek šly z platformy pryč směrem od raidu. Následně se přidáváme ke zbytku raidu. Zde nás mohou potřebovat s naším Divine Protection na souk dalšího Soul Reaper nebo na vybouchání <a href="https://www.wowhead.com/wotlk/spell=70498">Vile Spirits</a>. Zde jen pozor, pokud máte tankovat LK = v této fázi ho taháme přes celou platformu tam a zpátky. Tah na druhou stranu vždy začíná castem Vile Spirits, na kraji se s LK otočíme (tank zády ke středu, raid je na kraji platformy)</p>
 
+<p><em>(heroická obtížnost in progress)</em></p>
+
 <h2>Ruby Sanctum</h2>
 
 <h3>Baltharus the Warborn</h3>
@@ -756,6 +761,8 @@
 <p>V moment, kdy DBM zahlásí Stage 3 dáváte Divine Protection. Objeví se Halion a hned ho tauntnete Hand of Reckoning. Dohodíte Holy Shield a jedete rotaci. Princip s defkami je stejný jako v prvé fázi.</p>
 <p><strong>Vyhýbání ohňům:</strong></p>
 <p>V průběhu fightu budete nuceni se občas vyhnout ohňům z Meteor Strike. Pro raid je lepší když couvnete nebo jdete blíže k Halionovi (boss má velký hitbox, tak by ho to nemělo nikam posouvat). Když budete nuceni uhýbat do strany, vždy to ohlašujte raidu!</p>
+
+<p><em>(heroická obtížnost in progress)</em></p>
 
 
     </section>
